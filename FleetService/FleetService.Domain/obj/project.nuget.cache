@@ -1,20 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bqrQfkr5bN0=",
-  "success": false,
+  "dgSpecHash": "HHccwEOFdVU=",
+  "success": true,
   "projectFilePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Domain\\FleetService.Domain.csproj",
   "expectedPackageFiles": [],
-  "logs": [
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj'. Check that the project reference is valid and that the project file exists.",
-      "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Domain\\FleetService.Domain.csproj",
-      "filePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Domain\\FleetService.Domain.csproj",
-      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  "logs": []
 }

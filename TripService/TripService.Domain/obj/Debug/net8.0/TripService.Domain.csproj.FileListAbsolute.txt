@@ -1,0 +1,12 @@
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\bin\Debug\net8.0\TripService.Domain.deps.json
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\bin\Debug\net8.0\TripService.Domain.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\bin\Debug\net8.0\TripService.Domain.pdb
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\TripService.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\TripService.Domain.AssemblyInfoInputs.cache
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\TripService.Domain.AssemblyInfo.cs
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\TripService.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\TripService.Domain.sourcelink.json
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\TripService.Domain.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\refint\TripService.Domain.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\TripService.Domain.pdb
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\ref\TripService.Domain.dll

@@ -974,9 +974,6 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj",
-      "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj",
-      "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\Shared\\Shared.csproj",
       "Microsoft.NET.Test.Sdk >= 17.8.0",
       "NUnit >= 3.14.0",
       "NUnit.Analyzers >= 3.9.0",
@@ -1016,17 +1013,7 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {
-            "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj": {
-              "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj"
-            },
-            "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj": {
-              "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj"
-            },
-            "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\Shared\\Shared.csproj": {
-              "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\Shared\\Shared.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {
@@ -1084,34 +1071,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.418/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    },
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    },
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\Shared\\Shared.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\Shared\\Shared.csproj",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  }
 }

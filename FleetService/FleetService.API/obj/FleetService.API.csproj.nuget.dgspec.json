@@ -41,9 +41,6 @@
               },
               "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Infrastructure\\FleetService.Infrastructure.csproj": {
                 "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Infrastructure\\FleetService.Infrastructure.csproj"
-              },
-              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj": {
-                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj"
               }
             }
           }
@@ -66,6 +63,12 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.24, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -126,9 +129,6 @@
             "projectReferences": {
               "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Domain\\FleetService.Domain.csproj": {
                 "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Domain\\FleetService.Domain.csproj"
-              },
-              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj": {
-                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj"
               }
             }
           }
@@ -196,9 +196,6 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj": {
-                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj"
-              },
               "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
                 "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj"
               }
@@ -274,8 +271,8 @@
               "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Domain\\FleetService.Domain.csproj": {
                 "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Domain\\FleetService.Domain.csproj"
               },
-              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj": {
-                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj"
+              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
+                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj"
               }
             }
           }
@@ -294,6 +291,22 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

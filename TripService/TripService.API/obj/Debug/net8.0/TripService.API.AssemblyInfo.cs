@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TripService.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0b4aa76a8993f0b5a71adb7c3e76ab2647dac3d0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0abe11e902c2dab6714015d363d4cbc94fe1beb8")]
 [assembly: System.Reflection.AssemblyProductAttribute("TripService.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TripService.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

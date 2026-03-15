@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "3SRiOtocEEg=",
-  "success": false,
+  "dgSpecHash": "Y4vgvRCl6Vw=",
+  "success": true,
   "projectFilePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.API\\TripService.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nancy\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.24\\microsoft.aspnetcore.openapi.8.0.24.nupkg.sha512",
@@ -12,17 +12,5 @@
     "C:\\Users\\Nancy\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.6.2\\swashbuckle.aspnetcore.swaggergen.6.6.2.nupkg.sha512",
     "C:\\Users\\Nancy\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.6.2\\swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj'. Check that the project reference is valid and that the project file exists.",
-      "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.API\\TripService.API.csproj",
-      "filePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.API\\TripService.API.csproj",
-      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  "logs": []
 }

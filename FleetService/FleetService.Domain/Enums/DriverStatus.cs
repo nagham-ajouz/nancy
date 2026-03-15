@@ -1,6 +1,6 @@
 namespace FleetService.Domain.Enums;
 
-public class DriverStatus
+public enum DriverStatus
 {
-    // Available, OnTrip, Inactive
+    Available, OnTrip, Inactive
 }

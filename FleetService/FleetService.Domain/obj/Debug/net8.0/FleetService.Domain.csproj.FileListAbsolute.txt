@@ -1,0 +1,16 @@
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\bin\Debug\net8.0\FleetService.Domain.deps.json
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\bin\Debug\net8.0\FleetService.Domain.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\bin\Debug\net8.0\FleetService.Domain.pdb
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\bin\Debug\net8.0\Shared.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\bin\Debug\net8.0\Shared.pdb
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\obj\Debug\net8.0\FleetService.Domain.csproj.AssemblyReference.cache
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\obj\Debug\net8.0\FleetService.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\obj\Debug\net8.0\FleetService.Domain.AssemblyInfoInputs.cache
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\obj\Debug\net8.0\FleetService.Domain.AssemblyInfo.cs
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\obj\Debug\net8.0\FleetService.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\obj\Debug\net8.0\FleetService.Domain.sourcelink.json
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\obj\Debug\net8.0\FleetSer.5E8A519E.Up2Date
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\obj\Debug\net8.0\FleetService.Domain.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\obj\Debug\net8.0\refint\FleetService.Domain.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\obj\Debug\net8.0\FleetService.Domain.pdb
+C:\Users\Nancy\Desktop\Project\InMindProject\FleetService\FleetService.Domain\obj\Debug\net8.0\ref\FleetService.Domain.dll
