@@ -1,4 +1,5 @@
 using FleetService.Domain.Enums;
+using FleetService.Domain.Exceptions;
 using FleetService.Domain.ValueObjects;
 using Shared.BaseClasses;
 
@@ -29,5 +30,37 @@ public class Driver : AggregateRoot
         LicenseNumber = licenseNumber;
         LicenseExpiry = licenseExpiry;
         Status        = DriverStatus.Available;
+    }
+    
+    internal void AssignVehicle(Guid vehicleId)
+    {
+        VehicleId = vehicleId;
+        Status    = DriverStatus.Available; 
+    }
+
+    internal void UnassignVehicle()
+    {
+        VehicleId = null;
+    }
+    
+    public void MarkOnTrip()
+    {
+        if (Status != DriverStatus.Available)
+            throw new DomainException($"Driver must be Available to start a trip. Current status: {Status}");
+
+        Status = DriverStatus.OnTrip;
+    }
+
+    public void MarkAvailable()
+    {
+        Status = DriverStatus.Available;
+    }
+
+    public void Deactivate()
+    {
+        if (Status == DriverStatus.OnTrip)
+            throw new DomainException("Cannot deactivate a driver who is currently on a trip.");
+
+        Status = DriverStatus.Inactive;
     }
 }
