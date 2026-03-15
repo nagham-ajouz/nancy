@@ -14,3 +14,5 @@ C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Application
 C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Application\obj\Debug\net8.0\refint\TripService.Application.dll
 C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Application\obj\Debug\net8.0\TripService.Application.pdb
 C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Application\obj\Debug\net8.0\ref\TripService.Application.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Application\bin\Debug\net8.0\Shared.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Application\bin\Debug\net8.0\Shared.pdb

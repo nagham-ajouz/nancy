@@ -24,7 +24,8 @@
     <ItemGroup>
       <ProjectReference Include="..\FleetService.Application\FleetService.Application.csproj" />
       <ProjectReference Include="..\FleetService.Domain\FleetService.Domain.csproj" />
-      <ProjectReference Include="..\Shared\Shared.csproj" />
+      <ProjectReference Include="..\..\Shared\Shared.csproj" />
     </ItemGroup>
 
 </Project>
+

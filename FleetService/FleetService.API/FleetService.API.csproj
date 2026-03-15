@@ -19,7 +19,8 @@
       <ProjectReference Include="..\FleetService.Application\FleetService.Application.csproj" />
       <ProjectReference Include="..\FleetService.Domain\FleetService.Domain.csproj" />
       <ProjectReference Include="..\FleetService.Infrastructure\FleetService.Infrastructure.csproj" />
-      <ProjectReference Include="..\Shared\Shared.csproj" />
+      <ProjectReference Include="..\..\Shared\Shared.csproj" />
     </ItemGroup>
 
 </Project>
+

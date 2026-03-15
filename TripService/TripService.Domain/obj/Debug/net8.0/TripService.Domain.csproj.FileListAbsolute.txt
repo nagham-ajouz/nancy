@@ -10,3 +10,7 @@ C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\
 C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\refint\TripService.Domain.dll
 C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\TripService.Domain.pdb
 C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\ref\TripService.Domain.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\bin\Debug\net8.0\Shared.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\bin\Debug\net8.0\Shared.pdb
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\TripService.Domain.csproj.AssemblyReference.cache
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Domain\obj\Debug\net8.0\TripServ.15BACA89.Up2Date

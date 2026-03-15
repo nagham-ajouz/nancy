@@ -974,8 +974,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
-          "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj": "1.0.0",
-          "FleetService.Domain": "1.0.0"
+          "FleetService.Domain": "1.0.0",
+          "Shared": "1.0.0"
         },
         "compile": {
           "bin/placeholder/FleetService.Application.dll": {}
@@ -988,7 +988,6 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
-          "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj": "1.0.0",
           "Shared": "1.0.0"
         },
         "compile": {
@@ -2796,12 +2795,12 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj",
       "FleetService.Application >= 1.0.0",
       "FleetService.Domain >= 1.0.0",
       "FleetService.Infrastructure >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 8.0.24",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.0",
+      "Shared >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.6.2"
     ]
   },
@@ -2847,8 +2846,8 @@
             "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Infrastructure\\FleetService.Infrastructure.csproj": {
               "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Infrastructure\\FleetService.Infrastructure.csproj"
             },
-            "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj": {
-              "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj"
+            "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
+              "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj"
             }
           }
         }
@@ -2905,16 +2904,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.418/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  }
 }

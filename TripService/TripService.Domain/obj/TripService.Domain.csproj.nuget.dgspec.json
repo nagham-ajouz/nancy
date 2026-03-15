@@ -100,9 +100,6 @@
             "projectReferences": {
               "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
                 "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj"
-              },
-              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj": {
-                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj"
               }
             }
           }

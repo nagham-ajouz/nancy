@@ -98,8 +98,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj": {
-                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj"
+              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
+                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj"
               },
               "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Domain\\TripService.Domain.csproj": {
                 "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Domain\\TripService.Domain.csproj"
@@ -172,9 +172,6 @@
             "projectReferences": {
               "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
                 "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj"
-              },
-              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj": {
-                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj"
               }
             }
           }

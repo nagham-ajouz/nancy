@@ -10,3 +10,13 @@ C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastruct
 C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\obj\Debug\net8.0\refint\TripService.Infrastructure.dll
 C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\obj\Debug\net8.0\TripService.Infrastructure.pdb
 C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\obj\Debug\net8.0\ref\TripService.Infrastructure.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\bin\Debug\net8.0\TripService.Infrastructure.runtimeconfig.json
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\bin\Debug\net8.0\Shared.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\bin\Debug\net8.0\TripService.Application.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\bin\Debug\net8.0\TripService.Domain.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\bin\Debug\net8.0\TripService.Application.pdb
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\bin\Debug\net8.0\TripService.Domain.pdb
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\bin\Debug\net8.0\Shared.pdb
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\obj\Debug\net8.0\TripService.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\obj\Debug\net8.0\TripServ.056B4976.Up2Date
+C:\Users\Nancy\Desktop\Project\InMindProject\TripService\TripService.Infrastructure\obj\Debug\net8.0\TripService.Infrastructure.genruntimeconfig.cache

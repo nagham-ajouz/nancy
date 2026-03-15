@@ -98,3 +98,6 @@ C:\Users\Nancy\Desktop\Project\InMindProject\tests\FleetService.Tests\obj\Debug\
 C:\Users\Nancy\Desktop\Project\InMindProject\tests\FleetService.Tests\obj\Debug\net8.0\FleetService.Tests.pdb
 C:\Users\Nancy\Desktop\Project\InMindProject\tests\FleetService.Tests\obj\Debug\net8.0\FleetService.Tests.genruntimeconfig.cache
 C:\Users\Nancy\Desktop\Project\InMindProject\tests\FleetService.Tests\obj\Debug\net8.0\ref\FleetService.Tests.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\tests\FleetService.Tests\bin\Debug\net8.0\CoverletSourceRootsMapping_FleetService.Tests
+C:\Users\Nancy\Desktop\Project\InMindProject\tests\FleetService.Tests\bin\Debug\net8.0\Shared.dll
+C:\Users\Nancy\Desktop\Project\InMindProject\tests\FleetService.Tests\bin\Debug\net8.0\Shared.pdb
