@@ -1,6 +1,3 @@
 namespace FleetService.Domain.Events;
 
-public class DriverAssignedEvent
-{
-    
-}
+public record DriverAssignedEvent(Guid VehicleId, Guid DriverId);

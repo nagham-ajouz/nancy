@@ -1,6 +1,4 @@
-namespace FleetService.Domain.Events;
+using FleetService.Domain.Enums;
 
-public class VehicleStatusChangedEvent
-{
-    
-}
+namespace FleetService.Domain.Events;
+public record VehicleStatusChangedEvent(Guid VehicleId, VehicleStatus NewStatus);
