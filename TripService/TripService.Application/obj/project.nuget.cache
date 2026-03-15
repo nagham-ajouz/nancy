@@ -1,8 +1,20 @@
 {
   "version": 2,
-  "dgSpecHash": "/V3mH0s0w3s=",
-  "success": true,
+  "dgSpecHash": "PBHX0tXu8oc=",
+  "success": false,
   "projectFilePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Application\\TripService.Application.csproj",
   "expectedPackageFiles": [],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Application\\TripService.Application.csproj",
+      "filePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Application\\TripService.Application.csproj",
+      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

@@ -1,6 +1,10 @@
 namespace TripService.Domain.Enums;
 
-public class TripStatus
+public enum TripStatus
 {
-    // Requested, Assigned, InProgress, Completed, Invoiced
+    Requested,
+    Assigned,
+    InProgress,
+    Completed,
+    Invoiced
 }

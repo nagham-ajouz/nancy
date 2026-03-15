@@ -2,9 +2,23 @@
   "version": 3,
   "targets": {
     "net8.0": {
+      "Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Shared.dll": {}
+        }
+      },
       "TripService.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj": "1.0.0",
+          "Shared": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/TripService.Domain.dll": {}
         },
@@ -15,6 +29,11 @@
     }
   },
   "libraries": {
+    "Shared/1.0.0": {
+      "type": "project",
+      "path": "../../Shared/Shared.csproj",
+      "msbuildProject": "../../Shared/Shared.csproj"
+    },
     "TripService.Domain/1.0.0": {
       "type": "project",
       "path": "../TripService.Domain/TripService.Domain.csproj",
@@ -23,6 +42,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj",
       "TripService.Domain >= 1.0.0"
     ]
   },
@@ -59,6 +79,9 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
+            "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj": {
+              "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj"
+            },
             "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Domain\\TripService.Domain.csproj": {
               "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Domain\\TripService.Domain.csproj"
             }
@@ -98,5 +121,16 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.418/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj'. Check that the project reference is valid and that the project file exists.",
+      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\Shared\\Shared.csproj",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

@@ -1,6 +1,7 @@
 namespace TripService.Domain.Events;
 
-public class TripStartedEvent
-{
-    
-}
+public record TripStartedEvent(
+    Guid TripId, 
+    Guid VehicleId, 
+    Guid DriverId
+);

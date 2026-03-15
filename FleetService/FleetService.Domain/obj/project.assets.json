@@ -23,6 +23,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj",
       "Shared >= 1.0.0"
     ]
   },
@@ -59,6 +60,9 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
+            "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj": {
+              "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj"
+            },
             "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
               "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj"
             }
@@ -98,5 +102,16 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.418/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj'. Check that the project reference is valid and that the project file exists.",
+      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

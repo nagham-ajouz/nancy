@@ -41,6 +41,9 @@
               },
               "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Infrastructure\\FleetService.Infrastructure.csproj": {
                 "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Infrastructure\\FleetService.Infrastructure.csproj"
+              },
+              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj": {
+                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj"
               }
             }
           }
@@ -129,6 +132,9 @@
             "projectReferences": {
               "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Domain\\FleetService.Domain.csproj": {
                 "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\FleetService.Domain\\FleetService.Domain.csproj"
+              },
+              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj": {
+                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj"
               }
             }
           }
@@ -196,6 +202,9 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj": {
+                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\FleetService\\Shared\\Shared.csproj"
+              },
               "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
                 "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj"
               }
