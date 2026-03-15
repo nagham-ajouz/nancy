@@ -2,6 +2,7 @@ using FleetService.Domain.Enums;
 using FleetService.Domain.Exceptions;
 using FleetService.Domain.ValueObjects;
 using Shared.BaseClasses;
+using Shared.Exceptions;
 
 namespace FleetService.Domain.Entities;
 
