@@ -1,6 +1,8 @@
-namespace FleetService.Application.DTOs.Vehicle;
+namespace FleetService.Application.DTOs.Driver;
 
 public class UpdateDriverDto
 {
-    
+    public string   FirstName     { get; set; }
+    public string   LastName      { get; set; }
+    public DateTime LicenseExpiry { get; set; }
 }
