@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj": {}
+    "C:\\Dev\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
+    "C:\\Dev\\InMindProject\\Shared\\Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj",
+        "projectUniqueName": "C:\\Dev\\InMindProject\\Shared\\Shared.csproj",
         "projectName": "Shared",
-        "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj",
+        "projectPath": "C:\\Dev\\InMindProject\\Shared\\Shared.csproj",
         "packagesPath": "C:\\Users\\Nancy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\obj\\",
+        "outputPath": "C:\\Dev\\InMindProject\\Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -69,14 +69,14 @@
         }
       }
     },
-    "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj": {
+    "C:\\Dev\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
+        "projectUniqueName": "C:\\Dev\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
         "projectName": "FleetService.Tests",
-        "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
+        "projectPath": "C:\\Dev\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
         "packagesPath": "C:\\Users\\Nancy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\obj\\",
+        "outputPath": "C:\\Dev\\InMindProject\\tests\\FleetService.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -98,14 +98,14 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
-                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj"
+              "C:\\Dev\\InMindProject\\Shared\\Shared.csproj": {
+                "projectPath": "C:\\Dev\\InMindProject\\Shared\\Shared.csproj"
               },
-              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj": {
-                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj"
+              "C:\\Dev\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj": {
+                "projectPath": "C:\\Dev\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj"
               },
-              "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj": {
-                "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj"
+              "C:\\Dev\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj": {
+                "projectPath": "C:\\Dev\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj"
               }
             }
           }

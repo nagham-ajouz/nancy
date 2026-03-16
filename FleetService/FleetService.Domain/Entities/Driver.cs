@@ -15,7 +15,12 @@ public class Driver : AggregateRoot
     public DriverStatus  Status        { get; private set; }
     public Guid?         VehicleId     { get; private set; }
     
-    private Driver() { }
+    private Driver()
+    {
+        FirstName     = null!;
+        LastName      = null!;
+        LicenseNumber = null!;
+    }
 
     public Driver(Guid id, string firstName, string lastName,
         LicenseNumber licenseNumber, DateTime licenseExpiry)

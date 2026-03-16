@@ -1,3 +1,4 @@
+using FleetService.Application.Interfaces;
 using FleetService.Domain.Entities;
 using FleetService.Domain.Enums;
 using FleetService.Infrastructure.Persistence;
@@ -5,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FleetService.Infrastructure.Repositories;
 
-public class DriverRepository
+public class DriverRepository : IDriverRepository
 {
     private readonly FleetDbContext _context;
 

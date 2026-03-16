@@ -17,7 +17,11 @@ public class Vehicle : AggregateRoot
     public decimal      Mileage     { get; private set; }
     public Guid?        DriverId    { get; private set; }
     
-    private Vehicle() { }
+    private Vehicle()
+    {
+        PlateNumber = null!;
+        Model       = null!;
+    }
 
     public Vehicle(Guid id, PlateNumber plateNumber, string model, int year, VehicleType type)
     {

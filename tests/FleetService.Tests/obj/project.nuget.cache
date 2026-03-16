@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3YY+JJlRJEk=",
+  "dgSpecHash": "gZRb5A6KrK0=",
   "success": false,
-  "projectFilePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
+  "projectFilePath": "C:\\Dev\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nancy\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
     "C:\\Users\\Nancy\\.nuget\\packages\\microsoft.codecoverage\\17.8.0\\microsoft.codecoverage.17.8.0.nupkg.sha512",
@@ -22,10 +22,10 @@
     {
       "code": "NU1104",
       "level": "Error",
-      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj'. Check that the project reference is valid and that the project file exists.",
-      "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
-      "filePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
-      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj",
+      "message": "Unable to find project 'C:\\Dev\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "C:\\Dev\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
+      "filePath": "C:\\Dev\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
+      "libraryId": "C:\\Dev\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj",
       "targetGraphs": [
         "net8.0"
       ]
@@ -33,10 +33,10 @@
     {
       "code": "NU1104",
       "level": "Error",
-      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj'. Check that the project reference is valid and that the project file exists.",
-      "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
-      "filePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
-      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj",
+      "message": "Unable to find project 'C:\\Dev\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "C:\\Dev\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
+      "filePath": "C:\\Dev\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
+      "libraryId": "C:\\Dev\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj",
       "targetGraphs": [
         "net8.0"
       ]

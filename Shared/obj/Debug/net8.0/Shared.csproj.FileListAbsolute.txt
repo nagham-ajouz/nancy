@@ -10,3 +10,15 @@ C:\Users\Nancy\Desktop\Project\InMindProject\Shared\obj\Debug\net8.0\Shared.dll
 C:\Users\Nancy\Desktop\Project\InMindProject\Shared\obj\Debug\net8.0\refint\Shared.dll
 C:\Users\Nancy\Desktop\Project\InMindProject\Shared\obj\Debug\net8.0\Shared.pdb
 C:\Users\Nancy\Desktop\Project\InMindProject\Shared\obj\Debug\net8.0\ref\Shared.dll
+C:\Dev\InMindProject\Shared\bin\Debug\net8.0\Shared.deps.json
+C:\Dev\InMindProject\Shared\bin\Debug\net8.0\Shared.dll
+C:\Dev\InMindProject\Shared\bin\Debug\net8.0\Shared.pdb
+C:\Dev\InMindProject\Shared\obj\Debug\net8.0\Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Dev\InMindProject\Shared\obj\Debug\net8.0\Shared.AssemblyInfoInputs.cache
+C:\Dev\InMindProject\Shared\obj\Debug\net8.0\Shared.AssemblyInfo.cs
+C:\Dev\InMindProject\Shared\obj\Debug\net8.0\Shared.csproj.CoreCompileInputs.cache
+C:\Dev\InMindProject\Shared\obj\Debug\net8.0\Shared.sourcelink.json
+C:\Dev\InMindProject\Shared\obj\Debug\net8.0\Shared.dll
+C:\Dev\InMindProject\Shared\obj\Debug\net8.0\refint\Shared.dll
+C:\Dev\InMindProject\Shared\obj\Debug\net8.0\Shared.pdb
+C:\Dev\InMindProject\Shared\obj\Debug\net8.0\ref\Shared.dll

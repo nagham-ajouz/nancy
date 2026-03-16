@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {}
+    "C:\\Dev\\InMindProject\\Shared\\Shared.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
+    "C:\\Dev\\InMindProject\\Shared\\Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj",
+        "projectUniqueName": "C:\\Dev\\InMindProject\\Shared\\Shared.csproj",
         "projectName": "Shared",
-        "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj",
+        "projectPath": "C:\\Dev\\InMindProject\\Shared\\Shared.csproj",
         "packagesPath": "C:\\Users\\Nancy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\obj\\",
+        "outputPath": "C:\\Dev\\InMindProject\\Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

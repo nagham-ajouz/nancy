@@ -52,11 +52,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Application\\TripService.Application.csproj",
+      "projectUniqueName": "C:\\Dev\\InMindProject\\TripService\\TripService.Application\\TripService.Application.csproj",
       "projectName": "TripService.Application",
-      "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Application\\TripService.Application.csproj",
+      "projectPath": "C:\\Dev\\InMindProject\\TripService\\TripService.Application\\TripService.Application.csproj",
       "packagesPath": "C:\\Users\\Nancy\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Application\\obj\\",
+      "outputPath": "C:\\Dev\\InMindProject\\TripService\\TripService.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -78,11 +78,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj": {
-              "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\Shared\\Shared.csproj"
+            "C:\\Dev\\InMindProject\\Shared\\Shared.csproj": {
+              "projectPath": "C:\\Dev\\InMindProject\\Shared\\Shared.csproj"
             },
-            "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Domain\\TripService.Domain.csproj": {
-              "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\TripService\\TripService.Domain\\TripService.Domain.csproj"
+            "C:\\Dev\\InMindProject\\TripService\\TripService.Domain\\TripService.Domain.csproj": {
+              "projectPath": "C:\\Dev\\InMindProject\\TripService\\TripService.Domain\\TripService.Domain.csproj"
             }
           }
         }
