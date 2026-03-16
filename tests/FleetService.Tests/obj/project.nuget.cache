@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "8POhVJKya8o=",
-  "success": true,
+  "dgSpecHash": "3YY+JJlRJEk=",
+  "success": false,
   "projectFilePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nancy\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
@@ -18,5 +18,28 @@
     "C:\\Users\\Nancy\\.nuget\\packages\\nunit3testadapter\\4.5.0\\nunit3testadapter.4.5.0.nupkg.sha512",
     "C:\\Users\\Nancy\\.nuget\\packages\\system.reflection.metadata\\1.6.0\\system.reflection.metadata.1.6.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
+      "filePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
+      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Application\\FleetService.Application.csproj",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
+      "filePath": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Tests\\FleetService.Tests.csproj",
+      "libraryId": "C:\\Users\\Nancy\\Desktop\\Project\\InMindProject\\tests\\FleetService.Domain\\FleetService.Domain.csproj",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }
