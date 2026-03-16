@@ -115,4 +115,15 @@ public class Vehicle : AggregateRoot
             throw new ArgumentException("Mileage cannot be negative.");
         Mileage += km;
     }
+    
+    // Called by application service on PUT — only safe fields can be updated directly
+    public void UpdateDetails(string model, int year)
+    {
+        if (string.IsNullOrWhiteSpace(model)) 
+            throw new ArgumentException("Model required.");
+        if (year < 1886 || year > DateTime.UtcNow.Year + 1) 
+            throw new ArgumentException("Invalid year.");
+        Model = model;
+        Year  = year;
+    }
 }

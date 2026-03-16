@@ -64,4 +64,15 @@ public class Driver : AggregateRoot
 
         Status = DriverStatus.Inactive;
     }
+    
+    public void UpdateDetails(string firstName, string lastName, DateTime licenseExpiry)
+    {
+        if (string.IsNullOrWhiteSpace(firstName)) 
+            throw new ArgumentException("First name required.");
+        if (string.IsNullOrWhiteSpace(lastName))  
+            throw new ArgumentException("Last name required.");
+        FirstName     = firstName;
+        LastName      = lastName;
+        LicenseExpiry = licenseExpiry;
+    }
 }
