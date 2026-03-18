@@ -22,7 +22,11 @@ public class Trip : Entity
     private readonly List<TripLog> _logs = new();
     public IReadOnlyCollection<TripLog> Logs => _logs.AsReadOnly();
 
-    private Trip() { }
+    private Trip()
+    {
+        StartLocation = null!;
+        EndLocation   = null!;
+    }
 
     // Created in Requested state — no driver/vehicle yet
     public Trip(Guid id, Location startLocation, Location endLocation)

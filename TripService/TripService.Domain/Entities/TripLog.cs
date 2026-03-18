@@ -10,7 +10,10 @@ public class TripLog : Entity
     public DateTime Timestamp { get; private set; }
     public decimal? Speed     { get; private set; }
 
-    private TripLog() { }
+    private TripLog()
+    {
+        Location = null!;
+    }
 
     public TripLog(Guid id, Guid tripId, Location location, DateTime timestamp, decimal? speed = null)
     {
