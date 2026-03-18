@@ -16,4 +16,5 @@ public interface ITripRepository
         DateTime?   to);
     Task AddAsync(Trip trip);
     Task UpdateAsync(Trip trip);
+    Task AddLogAsync(TripLog log);
 }

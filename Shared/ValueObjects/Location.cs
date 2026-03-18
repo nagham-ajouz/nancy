@@ -6,7 +6,7 @@ public class Location : ValueObject
 {
     public double Latitude  { get; }
     public double Longitude { get; }
-    public string Address   { get; }
+    public string Address { get; } 
 
     public Location(double latitude, double longitude, string address)
     {

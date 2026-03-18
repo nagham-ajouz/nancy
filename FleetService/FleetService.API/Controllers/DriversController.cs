@@ -1,11 +1,13 @@
 using FleetService.Application.DTOs.Driver;
 using FleetService.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetService.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class DriversController : ControllerBase
 {
     private readonly DriverService _driverService;
@@ -17,6 +19,7 @@ public class DriversController : ControllerBase
 
     // GET api/drivers
     [HttpGet]
+    [Authorize(Roles = "Admin,FleetManager,Dispatcher")]
     public async Task<IActionResult> GetAll()
     {
         var drivers = await _driverService.GetAllAsync();
@@ -25,6 +28,7 @@ public class DriversController : ControllerBase
 
     // GET api/drivers/{id}
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = "Admin,FleetManager,Dispatcher")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var driver = await _driverService.GetByIdAsync(id);
@@ -33,6 +37,7 @@ public class DriversController : ControllerBase
 
     // GET api/drivers/filter?status=Available
     [HttpGet("filter")]
+    [Authorize(Roles = "Admin,FleetManager,Dispatcher")]
     public async Task<IActionResult> GetByFilter([FromQuery] string? status)
     {
         var drivers = await _driverService.GetByFilterAsync(status);
@@ -41,6 +46,7 @@ public class DriversController : ControllerBase
 
     // POST api/drivers
     [HttpPost]
+    [Authorize(Roles = "Admin,FleetManager")]
     public async Task<IActionResult> Create([FromBody] CreateDriverDto dto)
     {
         var driver = await _driverService.CreateAsync(dto);
@@ -49,6 +55,7 @@ public class DriversController : ControllerBase
 
     // PUT api/drivers/{id}
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin,FleetManager")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateDriverDto dto)
     {
         var driver = await _driverService.UpdateAsync(id, dto);
@@ -57,6 +64,7 @@ public class DriversController : ControllerBase
 
     // DELETE api/drivers/{id}
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin,FleetManager")]
     public async Task<IActionResult> Delete(Guid id)
     {
         await _driverService.DeleteAsync(id);

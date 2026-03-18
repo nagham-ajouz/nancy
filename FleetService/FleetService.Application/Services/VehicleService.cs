@@ -11,11 +11,15 @@ public class VehicleService
 {
     private readonly IVehicleRepository _vehicleRepository;
     private readonly IDriverRepository  _driverRepository;
+    private readonly IFleetEventPublisher _publisher;
 
-    public VehicleService(IVehicleRepository vehicleRepository, IDriverRepository driverRepository)
+    public VehicleService(IVehicleRepository vehicleRepository, 
+        IDriverRepository driverRepository,
+            IFleetEventPublisher publisher)
     {
         _vehicleRepository = vehicleRepository;
         _driverRepository  = driverRepository;
+        _publisher         = publisher;
     }
 
     // CRUD 
@@ -70,6 +74,9 @@ public class VehicleService
             ?? throw new NotFoundException($"Vehicle {id} not found.");
         vehicle.Activate();
         await _vehicleRepository.UpdateAsync(vehicle);
+        
+        await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
+        
         return MapToDto(vehicle);
     }
 
@@ -114,6 +121,11 @@ public class VehicleService
 
         await _vehicleRepository.UpdateAsync(vehicle);
         await _driverRepository.UpdateAsync(driver);
+        
+        await _publisher.PublishDriverAssignedAsync(vehicle.Id, driver.Id);
+        await _publisher.PublishDriverStatusChangedAsync(driver.Id, driver.Status.ToString());
+
+        
         return MapToDto(vehicle);
     }
 

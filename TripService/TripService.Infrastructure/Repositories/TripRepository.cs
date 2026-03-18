@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using TripService.Application.Interfaces;
 using TripService.Domain.Entities;
 using TripService.Domain.Enums;
 using TripService.Infrastructure.Persistence;
 
 namespace TripService.Infrastructure.Repositories;
 
-public class TripRepository
+public class TripRepository : ITripRepository
 {
     private readonly TripDbContext _context;
 
@@ -63,7 +64,21 @@ public class TripRepository
 
     public async Task UpdateAsync(Trip trip)
     {
+        // Detach any already-tracked instance to avoid conflicts
+        var tracked = _context.ChangeTracker.Entries<Trip>()
+            .FirstOrDefault(e => e.Entity.Id == trip.Id);
+
+        if (tracked != null)
+            tracked.State = EntityState.Detached;
+
         _context.Trips.Update(trip);
+        await _context.SaveChangesAsync();
+    }
+    
+    public async Task AddLogAsync(TripLog log)
+    {
+        // Save the log directly — avoids concurrency issues with the parent trip
+        await _context.TripLogs.AddAsync(log);
         await _context.SaveChangesAsync();
     }
 }

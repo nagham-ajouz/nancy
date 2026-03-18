@@ -1,11 +1,13 @@
 using FleetService.Application.DTOs.Vehicle;
 using FleetService.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FleetService.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class VehiclesController : ControllerBase
 {
     private readonly VehicleService _vehicleService;
@@ -17,6 +19,7 @@ public class VehiclesController : ControllerBase
 
     // GET api/vehicles
     [HttpGet]
+    [Authorize(Roles = "Admin,FleetManager,Dispatcher")]
     public async Task<IActionResult> GetAll()
     {
         var vehicles = await _vehicleService.GetAllAsync();
@@ -25,6 +28,7 @@ public class VehiclesController : ControllerBase
 
     // GET api/vehicles/{id}
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = "Admin,FleetManager,Dispatcher")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var vehicle = await _vehicleService.GetByIdAsync(id);
@@ -33,6 +37,7 @@ public class VehiclesController : ControllerBase
 
     // GET api/vehicles/filter?status=Active&type=Sedan
     [HttpGet("filter")]
+    [Authorize(Roles = "Admin,FleetManager,Dispatcher")]
     public async Task<IActionResult> GetByFilter([FromQuery] string? status, [FromQuery] string? type)
     {
         var vehicles = await _vehicleService.GetByFilterAsync(status, type);
@@ -41,6 +46,7 @@ public class VehiclesController : ControllerBase
 
     // POST api/vehicles
     [HttpPost]
+    [Authorize(Roles = "Admin,FleetManager")]
     public async Task<IActionResult> Create([FromBody] CreateVehicleDto dto)
     {
         var vehicle = await _vehicleService.CreateAsync(dto);
@@ -49,6 +55,7 @@ public class VehiclesController : ControllerBase
 
     // PUT api/vehicles/{id}
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin,FleetManager")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateVehicleDto dto)
     {
         var vehicle = await _vehicleService.UpdateAsync(id, dto);
@@ -57,6 +64,7 @@ public class VehiclesController : ControllerBase
 
     // DELETE api/vehicles/{id}
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin,FleetManager")]
     public async Task<IActionResult> Delete(Guid id)
     {
         await _vehicleService.DeleteAsync(id);
@@ -67,6 +75,7 @@ public class VehiclesController : ControllerBase
 
     // PUT api/vehicles/{id}/activate
     [HttpPut("{id:guid}/activate")]
+    [Authorize(Roles = "Admin,FleetManager")]
     public async Task<IActionResult> Activate(Guid id)
     {
         var vehicle = await _vehicleService.ActivateAsync(id);
@@ -75,6 +84,7 @@ public class VehiclesController : ControllerBase
 
     // PUT api/vehicles/{id}/maintenance/start
     [HttpPut("{id:guid}/maintenance/start")]
+    [Authorize(Roles = "Admin,FleetManager")]
     public async Task<IActionResult> SendToMaintenance(Guid id)
     {
         var vehicle = await _vehicleService.SendToMaintenanceAsync(id);
@@ -83,6 +93,7 @@ public class VehiclesController : ControllerBase
 
     // PUT api/vehicles/{id}/maintenance/complete
     [HttpPut("{id:guid}/maintenance/complete")]
+    [Authorize(Roles = "Admin,FleetManager")]
     public async Task<IActionResult> CompleteMaintenance(Guid id)
     {
         var vehicle = await _vehicleService.CompleteMaintenanceAsync(id);
@@ -91,6 +102,7 @@ public class VehiclesController : ControllerBase
 
     // PUT api/vehicles/{id}/decommission
     [HttpPut("{id:guid}/decommission")]
+    [Authorize(Roles = "Admin,FleetManager")]
     public async Task<IActionResult> Decommission(Guid id)
     {
         var vehicle = await _vehicleService.DecommissionAsync(id);
@@ -109,6 +121,7 @@ public class VehiclesController : ControllerBase
 
     // PUT api/vehicles/{id}/unassign
     [HttpPut("{id:guid}/unassign")]
+    [Authorize(Roles = "Admin,FleetManager")]
     public async Task<IActionResult> UnassignDriver(Guid id)
     {
         var vehicle = await _vehicleService.UnassignDriverAsync(id);
