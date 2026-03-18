@@ -7,7 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- This gives access to RequestDelegate, HttpContext, IMiddleware -->
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="13.0.1" />
       <PackageReference Include="MassTransit" Version="8.1.3" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     </ItemGroup>
 
 </Project>

@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Shared.Middleware;
 using TripService.Application.Interfaces;
+using TripService.Application.Mapping;
 using TripService.Infrastructure.Cache;
 using TripService.Infrastructure.Persistence;
 using TripService.Infrastructure.Repositories;
@@ -19,6 +21,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
+
+builder.Services.AddAutoMapper(typeof(TripMappingProfile).Assembly);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -167,6 +171,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

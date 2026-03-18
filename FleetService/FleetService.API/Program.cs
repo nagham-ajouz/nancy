@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Json;
 using FleetService.Application.Interfaces;
+using FleetService.Application.Mapping;
 using FleetService.Application.Services;
 using FleetService.Infrastructure.Messaging.Consumers;
 using FleetService.Infrastructure.Messaging.Publishers;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Shared.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +49,8 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddControllers();
+
+builder.Services.AddAutoMapper(typeof(FleetMappingProfile).Assembly);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -152,7 +156,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

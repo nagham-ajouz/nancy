@@ -1,3 +1,4 @@
+using AutoMapper;
 using FleetService.Application.DTOs.Driver;
 using FleetService.Application.Interfaces;
 using FleetService.Domain.Entities;
@@ -10,23 +11,25 @@ namespace FleetService.Application.Services;
 public class DriverService
 {
     private readonly IDriverRepository _driverRepository;
+    private readonly IMapper           _mapper;
 
-    public DriverService(IDriverRepository driverRepository)
+    public DriverService(IDriverRepository driverRepository, IMapper mapper)
     {
         _driverRepository = driverRepository;
+        _mapper           = mapper;
     }
 
     public async Task<IEnumerable<DriverDto>> GetAllAsync()
     {
         var drivers = await _driverRepository.GetAllAsync();
-        return drivers.Select(MapToDto);
+        return _mapper.Map<IEnumerable<DriverDto>>(drivers);
     }
 
     public async Task<DriverDto> GetByIdAsync(Guid id)
     {
         var driver = await _driverRepository.GetByIdAsync(id)
             ?? throw new NotFoundException($"Driver {id} not found.");
-        return MapToDto(driver);
+        return _mapper.Map<DriverDto>(driver);
     }
 
     public async Task<DriverDto> CreateAsync(CreateDriverDto dto)
@@ -35,17 +38,16 @@ public class DriverService
         var driver = new Driver(Guid.NewGuid(), dto.FirstName, dto.LastName,
                                 licenseNumber, dto.LicenseExpiry);
         await _driverRepository.AddAsync(driver);
-        return MapToDto(driver);
+        return _mapper.Map<DriverDto>(driver);
     }
 
     public async Task<DriverDto> UpdateAsync(Guid id, UpdateDriverDto dto)
     {
         var driver = await _driverRepository.GetByIdAsync(id)
             ?? throw new NotFoundException($"Driver {id} not found.");
-        
         driver.UpdateDetails(dto.FirstName, dto.LastName, dto.LicenseExpiry);
         await _driverRepository.UpdateAsync(driver);
-        return MapToDto(driver);
+        return _mapper.Map<DriverDto>(driver);
     }
 
     public async Task DeleteAsync(Guid id)
@@ -58,23 +60,9 @@ public class DriverService
     public async Task<IEnumerable<DriverDto>> GetByFilterAsync(string? status)
     {
         DriverStatus? statusEnum = status != null
-            ? Enum.Parse<DriverStatus>(status, ignoreCase: true) //convert a string → enum.
+            ? Enum.Parse<DriverStatus>(status, ignoreCase: true)
             : null;
         var drivers = await _driverRepository.GetByFilterAsync(statusEnum);
-        return drivers.Select(MapToDto);
-    }
-
-    private static DriverDto MapToDto(Driver d)
-    {
-        return new DriverDto
-        {
-            Id            = d.Id,
-            FirstName     = d.FirstName,
-            LastName      = d.LastName,
-            LicenseNumber = d.LicenseNumber.Value,
-            LicenseExpiry = d.LicenseExpiry,
-            Status        = d.Status.ToString(),
-            VehicleId     = d.VehicleId
-        };
+        return _mapper.Map<IEnumerable<DriverDto>>(drivers);
     }
 }
