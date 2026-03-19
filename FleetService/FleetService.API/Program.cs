@@ -13,9 +13,22 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using Shared.Middleware;
+using Serilog.Context;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .Enrich.WithCorrelationId()
+    .WriteTo.Console(
+        outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{CorrelationId}] {Message:lj}{NewLine}{Exception}",
+        theme: Serilog.Sinks.SystemConsole.Themes.AnsiConsoleTheme.Code)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -112,7 +125,7 @@ builder.Services.AddScoped<IDriverRepository,  DriverRepository>();
 // Application services
 builder.Services.AddScoped<VehicleService>();
 builder.Services.AddScoped<DriverService>();
-
+builder.Services.AddScoped<DomainEventDispatcher>();
 builder.Services.AddMassTransit(x =>
 {
     // Register consumers
@@ -157,6 +170,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.Use(async (HttpContext context, RequestDelegate next) =>
+{
+    var correlationId = context.Request.Headers["X-Correlation-ID"].FirstOrDefault()
+                        ?? Guid.NewGuid().ToString();
+    context.Response.Headers["X-Correlation-ID"] = correlationId;
+    using (Serilog.Context.LogContext.PushProperty("CorrelationId", correlationId))
+    {
+        await next(context);
+    }
+});
+app.UseAuthentication(); 
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
