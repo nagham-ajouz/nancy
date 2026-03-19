@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trip Tracking</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 30px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .box {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            max-width: 400px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            padding: 8px 12px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .connect { background: #22c55e; color: black; }
+        .sub     { background: #3b82f6; color: white; }
+        .send    { background: #f59e0b; color: black; }
+
+        #logs {
+            margin-top: 20px;
+            background: #020617;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 600px;
+            height: 250px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>🚗 Trip Tracking (SignalR)</h2>
+
+<div class="box">
+    <label>JWT Token</label>
+    <input id="token">
+    <button class="connect" onclick="connect()">Connect</button>
+</div>
+
+<div class="box">
+    <label>Trip ID</label>
+    <input id="tripId">
+    <button class="sub" onclick="subscribe()">Subscribe</button>
+</div>
+
+<div class="box">
+    <button class="send" onclick="sendLocation()">Send Location</button>
+</div>
+
+<div id="logs"></div>
+
+<script>
+    let connection;
+
+    function log(msg) {
+        const logs = document.getElementById("logs");
+        logs.innerHTML += "<div>" + msg + "</div>";
+        logs.scrollTop = logs.scrollHeight;
+    }
+
+    // CONNECT
+    async function connect() {
+        const token = document.getElementById("token").value;
+
+        connection = new signalR.HubConnectionBuilder()
+            .withUrl(`http://localhost:5242/hubs/trip-tracking?access_token=${token}`)
+            .withAutomaticReconnect()
+            .build();
+
+        connection.on("ReceiveLocationUpdate", (data) => {
+            log("📍 " + JSON.stringify(data));
+        });
+
+        await connection.start();
+        log("✅ Connected");
+    }
+
+    // SUBSCRIBE
+    async function subscribe() {
+        const tripId = document.getElementById("tripId").value;
+        await connection.invoke("SubscribeToTrip", tripId);
+        log("👁 Subscribed to " + tripId);
+    }
+
+    // SEND LOCATION
+    async function sendLocation() {
+        const tripId = document.getElementById("tripId").value;
+
+        await connection.invoke(
+            "SendLocationUpdate",
+            tripId,
+            33.88,
+            35.50,
+            "Test",
+            60
+        );
+
+        log("📤 Sent location");
+    }
+</script>
+
+</body>
+</html>

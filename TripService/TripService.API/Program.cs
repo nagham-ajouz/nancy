@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Shared.Middleware;
+using TripService.API.Hubs;
 using TripService.Application.Interfaces;
 using TripService.Application.Mapping;
 using TripService.Infrastructure.Cache;
@@ -22,6 +23,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 
+builder.Services.AddSignalR();
+
 builder.Services.AddAutoMapper(typeof(TripMappingProfile).Assembly);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -35,23 +38,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer   = true,
             ValidIssuer      = builder.Configuration["Keycloak:Authority"]
         };
-
+        
         options.Events = new JwtBearerEvents
         {
+            OnMessageReceived = context =>
+            {
+                // SignalR passes the token as a query string: ?access_token=...
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    path.StartsWithSegments("/hubs"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            },
+
+            // Keep your existing OnTokenValidated for role extraction
             OnTokenValidated = context =>
             {
-                // Keycloak JWT has realm_access.roles as a nested JSON object
-                // We need to extract each role and add it as a ClaimTypes.Role
                 var claimsIdentity = context.Principal?.Identity as ClaimsIdentity;
                 if (claimsIdentity == null) return Task.CompletedTask;
-
-                // Find the raw realm_access claim
-                var realmAccessClaim = context.Principal?
-                    .FindFirst("realm_access")?.Value;
-
+                var realmAccessClaim = context.Principal?.FindFirst("realm_access")?.Value;
                 if (realmAccessClaim == null) return Task.CompletedTask;
-
-                // Parse the JSON and extract roles array
                 using var doc = JsonDocument.Parse(realmAccessClaim);
                 if (doc.RootElement.TryGetProperty("roles", out var rolesElement))
                 {
@@ -59,14 +69,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     {
                         var roleName = role.GetString();
                         if (!string.IsNullOrEmpty(roleName))
-                        {
-                            // Add each role as a standard ClaimTypes.Role claim
-                            claimsIdentity.AddClaim(
-                                new Claim(ClaimTypes.Role, roleName));
-                        }
+                            claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, roleName));
                     }
                 }
-
                 return Task.CompletedTask;
             }
         };
@@ -172,8 +177,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHub<TripTrackingHub>("/hubs/trip-tracking");
 app.MapControllers();
 app.Run();
 
