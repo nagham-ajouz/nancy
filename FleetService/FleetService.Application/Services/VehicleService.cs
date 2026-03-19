@@ -12,18 +12,21 @@ public class VehicleService
 {
     private readonly IVehicleRepository  _vehicleRepository;
     private readonly IDriverRepository   _driverRepository;
-    private readonly IFleetEventPublisher _publisher;
+    // private readonly IFleetEventPublisher _publisher;
     private readonly IMapper             _mapper;
+    private readonly DomainEventDispatcher _dispatcher;
 
     public VehicleService(IVehicleRepository vehicleRepository,
         IDriverRepository driverRepository,
-        IFleetEventPublisher publisher,
+        // IFleetEventPublisher publisher,
+        DomainEventDispatcher dispatcher,
         IMapper mapper)
     {
         _vehicleRepository = vehicleRepository;
         _driverRepository  = driverRepository;
-        _publisher         = publisher;
+        // _publisher         = publisher;
         _mapper            = mapper;
+        _dispatcher = dispatcher;
     }
 
     public async Task<IEnumerable<VehicleDto>> GetAllAsync()
@@ -70,7 +73,8 @@ public class VehicleService
             ?? throw new NotFoundException($"Vehicle {id} not found.");
         vehicle.Activate();
         await _vehicleRepository.UpdateAsync(vehicle);
-        await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
+        await _dispatcher.DispatchAsync(vehicle);
+        // await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -80,7 +84,8 @@ public class VehicleService
             ?? throw new NotFoundException($"Vehicle {id} not found.");
         vehicle.SendToMaintenance();
         await _vehicleRepository.UpdateAsync(vehicle);
-        await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
+        // await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
+        await _dispatcher.DispatchAsync(vehicle);
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -90,7 +95,8 @@ public class VehicleService
             ?? throw new NotFoundException($"Vehicle {id} not found.");
         vehicle.CompleteMaintenance();
         await _vehicleRepository.UpdateAsync(vehicle);
-        await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
+        // await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
+        await _dispatcher.DispatchAsync(vehicle);
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -100,7 +106,8 @@ public class VehicleService
             ?? throw new NotFoundException($"Vehicle {id} not found.");
         vehicle.Decommission();
         await _vehicleRepository.UpdateAsync(vehicle);
-        await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
+        // await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
+        await _dispatcher.DispatchAsync(vehicle);
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -113,8 +120,9 @@ public class VehicleService
         vehicle.AssignDriver(driver);
         await _vehicleRepository.UpdateAsync(vehicle);
         await _driverRepository.UpdateAsync(driver);
-        await _publisher.PublishDriverAssignedAsync(vehicle.Id, driver.Id);
-        await _publisher.PublishDriverStatusChangedAsync(driver.Id, driver.Status.ToString());
+        // await _publisher.PublishDriverAssignedAsync(vehicle.Id, driver.Id);
+        // await _publisher.PublishDriverStatusChangedAsync(driver.Id, driver.Status.ToString());
+        await _dispatcher.DispatchAsync(vehicle);
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -129,7 +137,8 @@ public class VehicleService
         vehicle.UnassignDriver(driver);
         await _vehicleRepository.UpdateAsync(vehicle);
         await _driverRepository.UpdateAsync(driver);
-        await _publisher.PublishDriverUnassignedAsync(vehicle.Id, driver.Id);
+        await _dispatcher.DispatchAsync(vehicle);
+        // await _publisher.PublishDriverUnassignedAsync(vehicle.Id, driver.Id);
         return _mapper.Map<VehicleDto>(vehicle);
     }
 

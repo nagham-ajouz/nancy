@@ -13,17 +13,20 @@ public class TripAppService
 {
     private readonly ITripRepository           _tripRepository;
     private readonly IVehicleAvailabilityCache _availabilityCache;
-    private readonly ITripEventPublisher       _publisher;
+    // private readonly ITripEventPublisher       _publisher;
     private readonly IMapper                   _mapper;
+    private readonly DomainEventDispatcher _dispatcher;
 
     public TripAppService(ITripRepository tripRepository,
         IVehicleAvailabilityCache availabilityCache,
-        ITripEventPublisher publisher,
+        // ITripEventPublisher publisher,
+        DomainEventDispatcher dispatcher,
         IMapper mapper)
     {
         _tripRepository    = tripRepository;
         _availabilityCache = availabilityCache;
-        _publisher         = publisher;
+        // _publisher         = publisher;
+        _dispatcher = dispatcher;
         _mapper            = mapper;
     }
 
@@ -78,7 +81,8 @@ public class TripAppService
             ?? throw new NotFoundException($"Trip {tripId} not found.");
         trip.Start();
         await _tripRepository.UpdateAsync(trip);
-        await _publisher.PublishTripStartedAsync(trip.Id, trip.VehicleId, trip.DriverId);
+        // await _publisher.PublishTripStartedAsync(trip.Id, trip.VehicleId, trip.DriverId);
+        await _dispatcher.DispatchAsync(trip); 
         return _mapper.Map<TripDto>(trip);
     }
 
@@ -88,8 +92,9 @@ public class TripAppService
             ?? throw new NotFoundException($"Trip {tripId} not found.");
         trip.Complete();
         await _tripRepository.UpdateAsync(trip);
-        await _publisher.PublishTripCompletedAsync(
-            trip.Id, trip.VehicleId, trip.DriverId, trip.DistanceKm ?? 0);
+        // await _publisher.PublishTripCompletedAsync(
+        //     trip.Id, trip.VehicleId, trip.DriverId, trip.DistanceKm ?? 0);
+        await _dispatcher.DispatchAsync(trip); 
         return _mapper.Map<TripDto>(trip);
     }
 

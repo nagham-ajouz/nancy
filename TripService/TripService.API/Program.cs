@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using Shared.Middleware;
 using TripService.Application.Interfaces;
 using TripService.Application.Mapping;
@@ -17,6 +18,17 @@ using TripService.Infrastructure.Messaging.Consumers;
 using TripService.Infrastructure.Messaging.Publishers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .Enrich.WithCorrelationId()
+    .WriteTo.Console(
+        outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{CorrelationId}] {Message:lj}{NewLine}{Exception}",
+        theme: Serilog.Sinks.SystemConsole.Themes.AnsiConsoleTheme.Code)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -113,7 +125,7 @@ builder.Services.AddScoped<ITripRepository, TripRepository>();
 // Cache — singleton so availability state persists across requests
 // Task 7 will replace this with a proper Redis/RabbitMQ-backed cache
 builder.Services.AddSingleton<IVehicleAvailabilityCache, VehicleAvailabilityCache>();
-
+builder.Services.AddScoped<DomainEventDispatcher>();
 // Application service
 builder.Services.AddScoped<TripAppService>();
 
@@ -172,6 +184,18 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.Use(async (HttpContext context, RequestDelegate next) =>
+{
+    var correlationId = context.Request.Headers["X-Correlation-ID"].FirstOrDefault()
+                        ?? Guid.NewGuid().ToString();
+    context.Response.Headers["X-Correlation-ID"] = correlationId;
+    using (Serilog.Context.LogContext.PushProperty("CorrelationId", correlationId))
+    {
+        await next(context);
+    }
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
