@@ -35,8 +35,11 @@ public class DriverService
     public async Task<DriverDto> CreateAsync(CreateDriverDto dto)
     {
         var licenseNumber = new LicenseNumber(dto.LicenseNumber);
-        var driver = new Driver(Guid.NewGuid(), dto.FirstName, dto.LastName,
-                                licenseNumber, dto.LicenseExpiry);
+        var driver = new Driver(Guid.NewGuid(), 
+            dto.FirstName, 
+            dto.LastName,
+            licenseNumber, 
+            dto.LicenseExpiry);
         await _driverRepository.AddAsync(driver);
         return _mapper.Map<DriverDto>(driver);
     }

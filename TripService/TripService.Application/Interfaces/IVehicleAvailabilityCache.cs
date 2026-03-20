@@ -10,4 +10,5 @@ public interface IVehicleAvailabilityCache
     Task<bool> IsDriverAvailableAsync(Guid driverId);
     Task SetVehicleAvailableAsync(Guid vehicleId, bool available);
     Task SetDriverAvailableAsync(Guid driverId, bool available);
+
 }

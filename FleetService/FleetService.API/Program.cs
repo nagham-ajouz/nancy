@@ -1,4 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Json;
 using FleetService.Application.Interfaces;
@@ -10,12 +9,12 @@ using FleetService.Infrastructure.Persistence;
 using FleetService.Infrastructure.Repositories;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Shared.Middleware;
-using Serilog.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,22 +76,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer      = builder.Configuration["Keycloak:Authority"]
         };
 
+        // ← Add this block for SignalR token support
         options.Events = new JwtBearerEvents
         {
+            OnMessageReceived = context =>
+            {
+                // SignalR passes the token as a query string: ?access_token=...
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    path.StartsWithSegments("/hubs"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            },
+
+            // Keep your existing OnTokenValidated for role extraction
             OnTokenValidated = context =>
             {
-                // Keycloak JWT has realm_access.roles as a nested JSON object
-                // We need to extract each role and add it as a ClaimTypes.Role
                 var claimsIdentity = context.Principal?.Identity as ClaimsIdentity;
                 if (claimsIdentity == null) return Task.CompletedTask;
-
-                // Find the raw realm_access claim
-                var realmAccessClaim = context.Principal?
-                    .FindFirst("realm_access")?.Value;
-
+                var realmAccessClaim = context.Principal?.FindFirst("realm_access")?.Value;
                 if (realmAccessClaim == null) return Task.CompletedTask;
-
-                // Parse the JSON and extract roles array
                 using var doc = JsonDocument.Parse(realmAccessClaim);
                 if (doc.RootElement.TryGetProperty("roles", out var rolesElement))
                 {
@@ -100,14 +107,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     {
                         var roleName = role.GetString();
                         if (!string.IsNullOrEmpty(roleName))
-                        {
-                            // Add each role as a standard ClaimTypes.Role claim
-                            claimsIdentity.AddClaim(
-                                new Claim(ClaimTypes.Role, roleName));
-                        }
+                            claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, roleName));
                     }
                 }
-
                 return Task.CompletedTask;
             }
         };
@@ -115,6 +117,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddHealthChecks()
+    .AddNpgSql(
+        connectionString: builder.Configuration.GetConnectionString("Default")!,
+        name: "postgresql",
+        tags: new[] { "database" })
+    .AddRabbitMQ(
+        rabbitConnectionString: $"amqp://{builder.Configuration["RabbitMQ:Username"]}:{builder.Configuration["RabbitMQ:Password"]}@{builder.Configuration["RabbitMQ:Host"]}",
+        name: "rabbitmq",
+        tags: new[] { "messaging" });
 builder.Services.AddDbContext<FleetDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
@@ -169,6 +180,29 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        var result = new
+        {
+            status    = report.Status.ToString(),
+            timestamp = DateTime.UtcNow,
+            service   = "FleetService",
+            checks    = report.Entries.ToDictionary(
+                e => e.Key,
+                e => new
+                {
+                    status      = e.Value.Status.ToString(),
+                    description = e.Value.Description,
+                    duration    = e.Value.Duration.TotalMilliseconds + "ms"
+                })
+        };
+        await context.Response.WriteAsJsonAsync(result);
+    }
+});
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.Use(async (HttpContext context, RequestDelegate next) =>
 {
@@ -180,6 +214,7 @@ app.Use(async (HttpContext context, RequestDelegate next) =>
         await next(context);
     }
 });
+
 app.UseAuthentication(); 
 app.UseAuthorization();
 app.MapControllers();

@@ -17,6 +17,7 @@ using TripService.Infrastructure.Repositories;
 using TripService.Application.Services;
 using TripService.Infrastructure.Messaging.Consumers;
 using TripService.Infrastructure.Messaging.Publishers;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,23 +51,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer   = true,
             ValidIssuer      = builder.Configuration["Keycloak:Authority"]
         };
-        
+
+        // SignalR token support
         options.Events = new JwtBearerEvents
         {
+            OnMessageReceived = context =>
+            {
+                // SignalR passes the token as a query string: ?access_token=...
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    path.StartsWithSegments("/hubs"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            },
+
             OnTokenValidated = context =>
             {
-                // Keycloak JWT has realm_access.roles as a nested JSON object
-                // We need to extract each role and add it as a ClaimTypes.Role
                 var claimsIdentity = context.Principal?.Identity as ClaimsIdentity;
                 if (claimsIdentity == null) return Task.CompletedTask;
-
-                // Find the raw realm_access claim
-                var realmAccessClaim = context.Principal?
-                    .FindFirst("realm_access")?.Value;
-
+                var realmAccessClaim = context.Principal?.FindFirst("realm_access")?.Value;
                 if (realmAccessClaim == null) return Task.CompletedTask;
-
-                // Parse the JSON and extract roles array
                 using var doc = JsonDocument.Parse(realmAccessClaim);
                 if (doc.RootElement.TryGetProperty("roles", out var rolesElement))
                 {
@@ -74,20 +82,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     {
                         var roleName = role.GetString();
                         if (!string.IsNullOrEmpty(roleName))
-                        {
-                            // Add each role as a standard ClaimTypes.Role claim
-                            claimsIdentity.AddClaim(
-                                new Claim(ClaimTypes.Role, roleName));
-                        }
+                            claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, roleName));
                     }
                 }
-
                 return Task.CompletedTask;
             }
         };
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddHealthChecks()
+    .AddNpgSql(
+        connectionString: builder.Configuration.GetConnectionString("Default")!,
+        name: "postgresql",
+        tags: new[] { "database" })
+    .AddRabbitMQ(
+        rabbitConnectionString: $"amqp://{builder.Configuration["RabbitMQ:Username"]}:{builder.Configuration["RabbitMQ:Password"]}@{builder.Configuration["RabbitMQ:Host"]}",
+        name: "rabbitmq",
+        tags: new[] { "messaging" });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -200,9 +212,33 @@ app.Use(async (HttpContext context, RequestDelegate next) =>
     }
 });
 
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        var result = new
+        {
+            status    = report.Status.ToString(),
+            timestamp = DateTime.UtcNow,
+            service   = "TripService",
+            checks    = report.Entries.ToDictionary(
+                e => e.Key,
+                e => new
+                {
+                    status      = e.Value.Status.ToString(),
+                    description = e.Value.Description,
+                    duration    = e.Value.Duration.TotalMilliseconds + "ms"
+                })
+        };
+        await context.Response.WriteAsJsonAsync(result);
+    }
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapHub<TripTrackingHub>("/hubs/trip-tracking");
+
 app.MapControllers();
 app.Run();
-

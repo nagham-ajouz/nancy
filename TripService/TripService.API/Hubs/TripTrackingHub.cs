@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using TripService.Application.DTOs.TripLog;
@@ -21,7 +22,7 @@ public class TripTrackingHub : Hub
 
     // Client calls: await connection.InvokeAsync("SubscribeToTrip", tripId)
     // After this, client receives "ReceiveLocationUpdate" messages for that trip
-    [Authorize(Roles = "Admin,Dispatcher,FleetManager")]
+    [Authorize(Roles = "Admin,Dispatcher")]
     public async Task SubscribeToTrip(Guid tripId)
     {
         // Add this connection to a SignalR group named after the trip
@@ -46,14 +47,36 @@ public class TripTrackingHub : Hub
     // ── Called by Driver to send a GPS update ───────────────────────────────
 
     [Authorize(Roles = "Admin,Driver")]
-    public async Task SendLocationUpdate(Guid tripId, double latitude, double longitude,
-        string address, decimal? speed)
+    public async Task SendLocationUpdate(
+        Guid tripId,
+        Guid driverId,    
+        double latitude,
+        double longitude,
+        string address,
+        decimal? speed)
     {
         _logger.LogInformation(
-            "SIGNALR: Location update received for trip {TripId} | Lat: {Lat} Lng: {Lng}",
-            tripId, latitude, longitude);
+            "SIGNALR: Location update | Trip: {TripId} | Driver: {DriverId}",
+            tripId, driverId);
 
-        // 1. Persist as TripLog entry in the database
+        // Admins bypass the check
+        bool isAdmin = Context.User?.IsInRole("Admin") ?? false;
+
+        if (!isAdmin)
+        {
+            // Check this driverId is actually assigned to this trip
+            bool isAssigned = await _tripService.IsDriverAssignedToTripAsync(tripId, driverId);
+            if (!isAssigned)
+            {
+                _logger.LogWarning(
+                    "SIGNALR: Unauthorized | Driver {DriverId} not assigned to trip {TripId}",
+                    driverId, tripId);
+                await Clients.Caller.SendAsync("Error",
+                    "You are not the driver assigned to this trip.");
+                return;
+            }
+        }
+
         var logDto = new AddTripLogDto
         {
             Latitude  = latitude,
@@ -73,18 +96,15 @@ public class TripTrackingHub : Hub
             _logger.LogWarning(
                 "Failed to save TripLog for trip {TripId}: {Error}",
                 tripId, ex.Message);
-
-            // Tell the driver something went wrong
             await Clients.Caller.SendAsync("Error", ex.Message);
             return;
         }
 
-        // 2. Broadcast to all subscribers of this trip
-        // Everyone in the group named after tripId receives this
         await Clients.Group(tripId.ToString())
             .SendAsync("ReceiveLocationUpdate", new
             {
                 tripId    = tripId,
+                driverId  = driverId,
                 latitude  = latitude,
                 longitude = longitude,
                 address   = address,
@@ -94,15 +114,14 @@ public class TripTrackingHub : Hub
             });
 
         _logger.LogInformation(
-            "SIGNALR: Location update broadcast to group {TripId}",
-            tripId);
+            "SIGNALR: Location broadcast to group {TripId}", tripId);
     }
     
     // ── Connection lifecycle ─────────────────────────────────────────────────
 
     public override async Task OnConnectedAsync()
     {
-        var user = Context.User?.Identity?.Name ?? "unknown";
+        var user = Context.User?.FindFirst("preferred_username")?.Value;
         _logger.LogInformation(
             "SIGNALR: Client connected | ConnectionId: {ConnectionId} | User: {User}",
             Context.ConnectionId, user);

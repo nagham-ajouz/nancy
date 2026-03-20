@@ -36,4 +36,6 @@ public class VehicleAvailabilityCache : IVehicleAvailabilityCache
         return Task.CompletedTask;
     }
     
+    
+    
 }

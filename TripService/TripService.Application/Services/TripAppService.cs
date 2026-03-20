@@ -107,4 +107,17 @@ public class TripAppService
         await _tripRepository.AddLogAsync(log);
         return _mapper.Map<TripLogDto>(log);
     }
+    
+    public async Task<bool> IsDriverAssignedToTripAsync(Guid tripId, Guid driverId)
+    {
+        var trip = await _tripRepository.GetByIdAsync(tripId);
+
+        if (trip == null)
+            throw new NotFoundException($"Trip {tripId} not found.");
+
+        if (trip.Status != TripStatus.InProgress)
+            throw new DomainException("Trip is not in progress.");
+
+        return trip.DriverId == driverId;
+    }
 }
