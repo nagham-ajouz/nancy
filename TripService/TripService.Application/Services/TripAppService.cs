@@ -137,4 +137,19 @@ public class TripAppService
 
         return trip.DriverId == driverId;
     }
+    
+    public async Task<TripDto> InvoiceAsync(Guid tripId, InvoiceTripDto dto)
+    {
+        var trip = await _tripRepository.GetByIdAsync(tripId)
+                   ?? throw new NotFoundException($"Trip {tripId} not found.");
+
+        // Money is a value object — validates amount >= 0 and currency not empty
+        var cost = new Money(dto.Amount, dto.Currency);
+
+        // Domain method enforces Completed → Invoiced transition
+        trip.Invoice(cost);
+
+        await _tripRepository.UpdateAsync(trip);
+        return _mapper.Map<TripDto>(trip);
+    }
 }

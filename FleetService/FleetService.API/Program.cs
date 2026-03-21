@@ -141,7 +141,12 @@ builder.Services.AddHealthChecks()
     .AddRabbitMQ(
         rabbitConnectionString: $"amqp://{builder.Configuration["RabbitMQ:Username"]}:{builder.Configuration["RabbitMQ:Password"]}@{builder.Configuration["RabbitMQ:Host"]}",
         name: "rabbitmq",
-        tags: new[] { "messaging" });
+        tags: new[] { "messaging" })
+    .AddRedis(
+        redisConnectionString: builder.Configuration.GetConnectionString("Redis")!,
+        name: "redis",
+        tags: new[] { "cache" });
+
 builder.Services.AddDbContext<FleetDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
