@@ -10,11 +10,16 @@ public class TripStartedConsumer : IConsumer<TripStartedMessage>
 {
     private readonly IDriverRepository _driverRepository;
     private readonly ILogger<TripStartedConsumer> _logger;
+    private readonly IFleetCacheService _cache; 
 
-    public TripStartedConsumer(IDriverRepository driverRepository, ILogger<TripStartedConsumer> logger)
+    public TripStartedConsumer(
+        IDriverRepository driverRepository, 
+        ILogger<TripStartedConsumer> logger,
+        IFleetCacheService cache)
     {
         _driverRepository = driverRepository;
         _logger           = logger;
+        _cache         = cache;
     }
 
     public async Task Consume(ConsumeContext<TripStartedMessage> context)
@@ -31,6 +36,9 @@ public class TripStartedConsumer : IConsumer<TripStartedMessage>
 
         driver.MarkOnTrip();
         await _driverRepository.UpdateAsync(driver);
+        
+        // After marking driver OnTrip
+        await _cache.InvalidateDriversAsync();
 
         _logger.LogInformation("Driver {DriverId} marked as OnTrip", message.DriverId);
     }

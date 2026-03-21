@@ -36,6 +36,12 @@ builder.Host.UseSerilog();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName  = "FleetManagement:"; // prefix for all keys
+});
+
 builder.Services.AddSignalR();
 
 builder.Services.AddAutoMapper(typeof(TripMappingProfile).Assembly);
@@ -137,9 +143,8 @@ builder.Services.AddDbContext<TripDbContext>(options =>
 // Repositories
 builder.Services.AddScoped<ITripRepository, TripRepository>();
 
-// Cache — singleton so availability state persists across requests
-// Task 7 will replace this with a proper Redis/RabbitMQ-backed cache
-builder.Services.AddSingleton<IVehicleAvailabilityCache, VehicleAvailabilityCache>();
+builder.Services.AddScoped<IVehicleAvailabilityCache, VehicleAvailabilityCache>();
+
 builder.Services.AddScoped<DomainEventDispatcher>();
 // Application service
 builder.Services.AddScoped<TripAppService>();

@@ -63,13 +63,30 @@ public class TripAppService
     public async Task<TripDto> AssignResourcesAsync(Guid tripId, AssignTripDto dto)
     {
         var trip = await _tripRepository.GetByIdAsync(tripId)
-            ?? throw new NotFoundException($"Trip {tripId} not found.");
-        bool vehicleAvailable = await _availabilityCache.IsVehicleAvailableAsync(dto.VehicleId);
-        bool driverAvailable  = await _availabilityCache.IsDriverAvailableAsync(dto.DriverId);
-        if (!vehicleAvailable)
-            throw new DomainException($"Vehicle {dto.VehicleId} is not available.");
-        if (!driverAvailable)
-            throw new DomainException($"Driver {dto.DriverId} is not available.");
+                   ?? throw new NotFoundException($"Trip {tripId} not found.");
+
+        // Check vehicle availability
+        bool? vehicleAvailable = await _availabilityCache.IsVehicleAvailableAsync(dto.VehicleId);
+
+        if (vehicleAvailable == null)
+            throw new DomainException(
+                $"Vehicle {dto.VehicleId} status is unknown. " +
+                "Ensure Fleet Service is running and has published vehicle status events.");
+
+        if (vehicleAvailable == false)
+            throw new DomainException($"Vehicle {dto.VehicleId} is not available for trips.");
+
+        // Check driver availability
+        bool? driverAvailable = await _availabilityCache.IsDriverAvailableAsync(dto.DriverId);
+
+        if (driverAvailable == null)
+            throw new DomainException(
+                $"Driver {dto.DriverId} status is unknown. " +
+                "Ensure Fleet Service is running and has published driver status events.");
+
+        if (driverAvailable == false)
+            throw new DomainException($"Driver {dto.DriverId} is not available for trips.");
+
         trip.AssignResources(dto.VehicleId, dto.DriverId);
         await _tripRepository.UpdateAsync(trip);
         return _mapper.Map<TripDto>(trip);

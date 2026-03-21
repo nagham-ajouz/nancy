@@ -12,27 +12,35 @@ public class VehicleService
 {
     private readonly IVehicleRepository  _vehicleRepository;
     private readonly IDriverRepository   _driverRepository;
-    // private readonly IFleetEventPublisher _publisher;
     private readonly IMapper             _mapper;
     private readonly DomainEventDispatcher _dispatcher;
+    private readonly IFleetCacheService _cache;
 
-    public VehicleService(IVehicleRepository vehicleRepository,
+    public VehicleService(
+        IVehicleRepository vehicleRepository,
         IDriverRepository driverRepository,
-        // IFleetEventPublisher publisher,
         DomainEventDispatcher dispatcher,
+        IFleetCacheService cache,
         IMapper mapper)
     {
         _vehicleRepository = vehicleRepository;
         _driverRepository  = driverRepository;
-        // _publisher         = publisher;
         _mapper            = mapper;
+        _cache             = cache;
         _dispatcher = dispatcher;
     }
 
     public async Task<IEnumerable<VehicleDto>> GetAllAsync()
     {
+        var cached = await _cache.GetVehiclesAsync();
+        if (cached != null)
+            return cached;
+
+        // Cache miss — hit DB, then cache result
         var vehicles = await _vehicleRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<VehicleDto>>(vehicles);
+        var dtos     = _mapper.Map<IEnumerable<VehicleDto>>(vehicles);
+        await _cache.SetVehiclesAsync(dtos);
+        return dtos;
     }
 
     public async Task<VehicleDto> GetByIdAsync(Guid id)
@@ -48,6 +56,7 @@ public class VehicleService
         var plateNumber = new PlateNumber(dto.PlateNumber);
         var vehicle     = new Vehicle(Guid.NewGuid(), plateNumber, dto.Model, dto.Year, type);
         await _vehicleRepository.AddAsync(vehicle);
+        await _cache.InvalidateVehiclesAsync();
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -57,6 +66,7 @@ public class VehicleService
             ?? throw new NotFoundException($"Vehicle {id} not found.");
         vehicle.UpdateDetails(dto.Model, dto.Year);
         await _vehicleRepository.UpdateAsync(vehicle);
+        await _cache.InvalidateVehiclesAsync();
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -65,6 +75,7 @@ public class VehicleService
         var vehicle = await _vehicleRepository.GetByIdAsync(id)
             ?? throw new NotFoundException($"Vehicle {id} not found.");
         await _vehicleRepository.DeleteAsync(vehicle);
+        await _cache.InvalidateVehiclesAsync(); // ← invalidate after delete
     }
 
     public async Task<VehicleDto> ActivateAsync(Guid id)
@@ -74,7 +85,7 @@ public class VehicleService
         vehicle.Activate();
         await _vehicleRepository.UpdateAsync(vehicle);
         await _dispatcher.DispatchAsync(vehicle);
-        // await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
+        await _cache.InvalidateVehiclesAsync(); // ← invalidate after status change
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -86,6 +97,7 @@ public class VehicleService
         await _vehicleRepository.UpdateAsync(vehicle);
         // await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
         await _dispatcher.DispatchAsync(vehicle);
+        await _cache.InvalidateVehiclesAsync();
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -95,8 +107,8 @@ public class VehicleService
             ?? throw new NotFoundException($"Vehicle {id} not found.");
         vehicle.CompleteMaintenance();
         await _vehicleRepository.UpdateAsync(vehicle);
-        // await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
         await _dispatcher.DispatchAsync(vehicle);
+        await _cache.InvalidateVehiclesAsync();
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -106,8 +118,8 @@ public class VehicleService
             ?? throw new NotFoundException($"Vehicle {id} not found.");
         vehicle.Decommission();
         await _vehicleRepository.UpdateAsync(vehicle);
-        // await _publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
         await _dispatcher.DispatchAsync(vehicle);
+        await _cache.InvalidateVehiclesAsync();
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -120,9 +132,8 @@ public class VehicleService
         vehicle.AssignDriver(driver);
         await _vehicleRepository.UpdateAsync(vehicle);
         await _driverRepository.UpdateAsync(driver);
-        // await _publisher.PublishDriverAssignedAsync(vehicle.Id, driver.Id);
-        // await _publisher.PublishDriverStatusChangedAsync(driver.Id, driver.Status.ToString());
         await _dispatcher.DispatchAsync(vehicle);
+        await _cache.InvalidateVehiclesAsync();
         return _mapper.Map<VehicleDto>(vehicle);
     }
 
@@ -138,7 +149,7 @@ public class VehicleService
         await _vehicleRepository.UpdateAsync(vehicle);
         await _driverRepository.UpdateAsync(driver);
         await _dispatcher.DispatchAsync(vehicle);
-        // await _publisher.PublishDriverUnassignedAsync(vehicle.Id, driver.Id);
+        await _cache.InvalidateVehiclesAsync();
         return _mapper.Map<VehicleDto>(vehicle);
     }
 

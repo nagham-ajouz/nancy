@@ -3,6 +3,7 @@ using System.Text.Json;
 using FleetService.Application.Interfaces;
 using FleetService.Application.Mapping;
 using FleetService.Application.Services;
+using FleetService.Infrastructure.Cache;
 using FleetService.Infrastructure.Messaging.Consumers;
 using FleetService.Infrastructure.Messaging.Publishers;
 using FleetService.Infrastructure.Persistence;
@@ -28,6 +29,15 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog();
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName  = "FleetManagement:";
+});
+Console.WriteLine($">>> Redis connection: {builder.Configuration.GetConnectionString("Redis")}");
+// Register cache service
+builder.Services.AddScoped<IFleetCacheService, FleetCacheService>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -61,6 +71,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddControllers();
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName  = "FleetManagement:"; // prefix for all keys
+});
 
 builder.Services.AddAutoMapper(typeof(FleetMappingProfile).Assembly);
 
@@ -172,6 +188,32 @@ builder.Services.AddMassTransit(x =>
 builder.Services.AddScoped<IFleetEventPublisher, FleetEventPublisher>();
 
 var app = builder.Build();
+
+// On startup, publish current status of all vehicles and drivers
+// so Trip Service cache is populated immediately
+using (var scope = app.Services.CreateScope())
+{
+    var vehicleRepo  = scope.ServiceProvider.GetRequiredService<IVehicleRepository>();
+    var driverRepo   = scope.ServiceProvider.GetRequiredService<IDriverRepository>();
+    var publisher    = scope.ServiceProvider.GetRequiredService<IFleetEventPublisher>();
+
+    var vehicles = await vehicleRepo.GetAllAsync();
+    foreach (var vehicle in vehicles)
+    {
+        await publisher.PublishVehicleStatusChangedAsync(
+            vehicle.Id, vehicle.Status.ToString());
+    }
+
+    var drivers = await driverRepo.GetAllAsync();
+    foreach (var driver in drivers)
+    {
+        await publisher.PublishDriverStatusChangedAsync(
+            driver.Id, driver.Status.ToString());
+    }
+
+    Log.Information("Startup: published {VehicleCount} vehicle and {DriverCount} driver statuses to RabbitMQ",
+        vehicles.Count(), drivers.Count());
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
