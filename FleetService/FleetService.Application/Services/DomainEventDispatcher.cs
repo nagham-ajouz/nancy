@@ -6,7 +6,7 @@ namespace FleetService.Application.Services;
 
 // Reads domain events that entities raised and publishes them to RabbitMQ
 // Called once after every save — no manual publisher calls needed anywhere
-public class DomainEventDispatcher
+public class DomainEventDispatcher : IDomainEventDispatcher
 {
     private readonly IFleetEventPublisher _publisher;
 

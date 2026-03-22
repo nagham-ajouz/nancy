@@ -1,4 +1,5 @@
 using FleetService.Application.DTOs.Vehicle;
+using FleetService.Application.Interfaces;
 using FleetService.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,9 @@ namespace FleetService.API.Controllers;
 [Authorize]
 public class VehiclesController : ControllerBase
 {
-    private readonly VehicleService _vehicleService;
+    private readonly IVehicleService _vehicleService;
 
-    public VehiclesController(VehicleService vehicleService)
+    public VehiclesController(IVehicleService vehicleService)
     {
         _vehicleService = vehicleService;
     }

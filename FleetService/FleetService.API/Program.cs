@@ -154,10 +154,15 @@ builder.Services.AddDbContext<FleetDbContext>(options =>
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IDriverRepository,  DriverRepository>();
 
+
+
 // Application services
 builder.Services.AddScoped<VehicleService>();
 builder.Services.AddScoped<DriverService>();
 builder.Services.AddScoped<DomainEventDispatcher>();
+builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+
 builder.Services.AddMassTransit(x =>
 {
     // Register consumers

@@ -8,18 +8,18 @@ using Shared.Exceptions;
 
 namespace FleetService.Application.Services;
 
-public class VehicleService
+public class VehicleService : IVehicleService
 {
     private readonly IVehicleRepository  _vehicleRepository;
     private readonly IDriverRepository   _driverRepository;
     private readonly IMapper             _mapper;
-    private readonly DomainEventDispatcher _dispatcher;
+    private readonly IDomainEventDispatcher _dispatcher;
     private readonly IFleetCacheService _cache;
 
     public VehicleService(
         IVehicleRepository vehicleRepository,
         IDriverRepository driverRepository,
-        DomainEventDispatcher dispatcher,
+        IDomainEventDispatcher dispatcher,
         IFleetCacheService cache,
         IMapper mapper)
     {

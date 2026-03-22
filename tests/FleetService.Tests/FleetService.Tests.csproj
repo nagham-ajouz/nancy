@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\FleetService\FleetService.API\FleetService.API.csproj" />
         <ProjectReference Include="..\..\FleetService\FleetService.Domain\FleetService.Domain.csproj" />
         <ProjectReference Include="..\..\FleetService\FleetService.Application\FleetService.Application.csproj" />
         <ProjectReference Include="..\..\FleetService\FleetService.Infrastructure\FleetService.Infrastructure.csproj" />
