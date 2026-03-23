@@ -1,2 +1,2 @@
-SELECT 'CREATE DATABASE fleet_db' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'fleet_db')\gexec
-SELECT 'CREATE DATABASE trip_db'  WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'trip_db')\gexec
+SELECT 'CREATE DATABASE "fleetDB"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'fleetDB')\gexec
+SELECT 'CREATE DATABASE "tripDB"'  WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'tripDB')\gexec
