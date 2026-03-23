@@ -80,4 +80,13 @@ public class TripsController : ControllerBase
         var log = await _tripService.AddLogAsync(id, dto);
         return Ok(log);
     }
+    
+    // PUT api/trips/{id}/invoice
+    [HttpPut("{id:guid}/invoice")]
+    [Authorize(Roles = "Admin,Dispatcher")]
+    public async Task<IActionResult> Invoice(Guid id, [FromBody] InvoiceTripDto dto)
+    {
+        var trip = await _tripService.InvoiceAsync(id, dto);
+        return Ok(trip);
+    }
 }

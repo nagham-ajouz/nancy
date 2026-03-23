@@ -42,5 +42,6 @@ public class DriverConfiguration : IEntityTypeConfiguration<Driver>
 
         builder.Property(d => d.VehicleId)
             .IsRequired(false);
+        
     }
 }

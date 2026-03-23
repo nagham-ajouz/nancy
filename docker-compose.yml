@@ -1,0 +1,148 @@
+services:
+
+  # ── PostgreSQL ───────────────────────────────────────────────
+  postgres:
+    image: postgres:15
+    container_name: fleet-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: nancy@postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      # Creates both databases on first startup
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ────────────────────────────────────────────────────
+  redis:
+    image: redis:7
+    container_name: fleet-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── RabbitMQ ─────────────────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: fleet-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ── Keycloak ─────────────────────────────────────────────────
+  keycloak-db:
+    image: postgres:15
+    container_name: fleet-keycloak-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    volumes:
+      - keycloak-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.0
+    container_name: fleet-keycloak
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  # ── Fleet Service ─────────────────────────────────────────────
+  fleet-service:
+    build:
+      context: .
+      dockerfile: FleetService/FleetService.API/Dockerfile
+    container_name: fleet-service
+    ports:
+      - "5141:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Default: "Host=postgres;Port=5432;Database=fleet_db;Username=postgres;Password=nancy@postgres"
+      ConnectionStrings__Redis: "redis:6379"
+      RabbitMQ__Host: rabbitmq
+      RabbitMQ__Username: guest
+      RabbitMQ__Password: guest
+      Keycloak__Authority: "http://keycloak:8080/realms/fleet-management"
+      Keycloak__Audience: fleet-client
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+
+  # ── Trip Service ──────────────────────────────────────────────
+  trip-service:
+    build:
+      context: .
+      dockerfile: TripService/TripService.API/Dockerfile
+    container_name: trip-service
+    ports:
+      - "5242:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Default: "Host=postgres;Port=5432;Database=trip_db;Username=postgres;Password=nancy@postgres"
+      ConnectionStrings__Redis: "redis:6379"
+      RabbitMQ__Host: rabbitmq
+      RabbitMQ__Username: guest
+      RabbitMQ__Password: guest
+      Keycloak__Authority: "http://keycloak:8080/realms/fleet-management"
+      Keycloak__Audience: fleet-client
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
+  keycloak-db-data:

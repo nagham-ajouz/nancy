@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Trip Tracking</title>
+
+    <!--SignalR JavaScript client-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 30px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .box {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            max-width: 400px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            padding: 8px 12px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* BUTTON COLORS */
+        .connect { background: #22c55e; color: black; }
+        .sub     { background: #3b82f6; color: white; }
+        .send    { background: #f59e0b; color: black; }
+
+        /* 🔥 HOVER EFFECTS */
+        .connect:hover { background: #16a34a; transform: scale(1.05); }
+        .sub:hover     { background: #2563eb; transform: scale(1.05); }
+        .send:hover    { background: #d97706; transform: scale(1.05); }
+
+        #logs {
+            margin-top: 20px;
+            background: #020617;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 600px;
+            height: 250px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+
+        .log-success { color: #22c55e; }
+        .log-error   { color: #ef4444; }
+        .log-info    { color: #38bdf8; }
+    </style>
+</head>
+
+<body>
+
+<h2>🚗 Trip Tracking (SignalR)</h2>
+
+<div class="box">
+    <label>JWT Token</label>
+    <input id="token">
+    <button class="connect" onclick="connect()">Connect</button>
+</div>
+
+<div class="box">
+    <label>Trip ID</label>
+    <input id="tripId">
+    <button class="sub" onclick="subscribe()">Subscribe</button>
+</div>
+
+<div class="box">
+    <label>Driver ID</label>
+    <input id="driverId" placeholder="e.g. 848f9471-7e7e-4559-b2cb-0bb3a7642027">
+</div>
+
+<div class="box">
+    <button class="send" onclick="sendLocation()">Send Location</button>
+</div>
+
+<div id="logs"></div>
+
+<script>
+
+    // live connection to the backend hub
+    let connection;
+
+    function log(msg, type = "info") {
+        const logs = document.getElementById("logs");
+        logs.innerHTML += `<div class="log-${type}">${msg}</div>`;
+        logs.scrollTop = logs.scrollHeight;
+    }
+
+    // CONNECT
+    async function connect() {
+        const token = document.getElementById("token").value;
+
+        connection = new signalR.HubConnectionBuilder()
+            .withUrl(`http://localhost:5242/hubs/trip-tracking?access_token=${token}`)
+            .withAutomaticReconnect()
+            .build();
+
+        // listens for location updates from backend
+        connection.on("ReceiveLocationUpdate", (data) => {
+            log(`
+                📍 <b>Trip:</b> ${data.tripId} <br>
+                👤 <b>Driver:</b> ${data.driverId} <br>
+                🌍 <b>Location:</b> ${data.latitude}, ${data.longitude} <br>
+                📌 <b>Address:</b> ${data.address} <br>
+                🚗 <b>Speed:</b> ${data.speed} km/h <br>
+                ⏱ <b>Time:</b> ${new Date(data.timestamp).toLocaleString()}
+            `, "success");
+        });
+
+        // listens for errors from backend (Clients.Caller.SendAsync("Error", ...))
+        connection.on("Error", (message) => {
+            log("❌ " + message, "error");
+        });
+
+        try {
+            await connection.start(); // triggers OnConnectedAsync()
+            log("✅ Connected", "success");
+        } catch (err) {
+            log("❌ Connection failed: " + err, "error");
+        }
+    }
+
+    // SUBSCRIBE TO TRIP
+    async function subscribe() {
+        const tripId = document.getElementById("tripId").value;
+
+        if (!connection) {
+            log("❌ Not connected", "error");
+            return;
+        }
+
+        try {
+            await connection.invoke("SubscribeToTrip", tripId);
+            log("👁 Subscribed to " + tripId, "info");
+        } catch (err) {
+            log("❌ Subscribe error: " + err, "error");
+        }
+    }
+
+    // SEND LOCATION
+    async function sendLocation() {
+        const tripId = document.getElementById("tripId").value;
+        const driverIdRaw = document.getElementById("driverId").value;
+
+        if (!tripId || !driverIdRaw) {
+            log("❌ TripId and DriverId are required", "error");
+            return;
+        }
+
+        // validate GUID format (important for backend Guid parameter)
+        const isValidGuid = /^[0-9a-fA-F-]{36}$/.test(driverIdRaw);
+
+        if (!isValidGuid) {
+            log("❌ Invalid Driver ID format", "error");
+            return;
+        }
+
+        try {
+            await connection.invoke(
+                "SendLocationUpdate",
+                tripId,
+                driverIdRaw,
+                33.88,
+                35.50,
+                "Test",
+                60
+            );
+
+            log("📤 Location sent", "success");
+        } catch (err) {
+            log("❌ Send error: " + err, "error");
+        }
+    }
+</script>
+
+</body>
+</html>

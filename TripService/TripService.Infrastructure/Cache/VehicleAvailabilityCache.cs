@@ -1,39 +1,80 @@
-using System.Collections.Concurrent;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using TripService.Application.Interfaces;
 
 namespace TripService.Infrastructure.Cache;
 
-// Stores vehicle/driver availability in memory.
-// Task 7 will update this cache when Fleet Service publishes events via RabbitMQ.
 public class VehicleAvailabilityCache : IVehicleAvailabilityCache
 {
-    // key = entity Id, value = is available
-    private readonly ConcurrentDictionary<Guid, bool> _vehicleAvailability = new();
-    private readonly ConcurrentDictionary<Guid, bool> _driverAvailability  = new();
+    private readonly IDistributedCache _cache;
+    private readonly ILogger<VehicleAvailabilityCache> _logger;
 
-    public Task<bool> IsVehicleAvailableAsync(Guid vehicleId)
+    private const string VehiclePrefix = "availability:vehicle:";
+    private const string DriverPrefix  = "availability:driver:";
+
+    private static readonly DistributedCacheEntryOptions CacheOptions = new()
     {
-        // Default to true if not in cache yet — will be fixed in Task 7
-        bool available = _vehicleAvailability.TryGetValue(vehicleId, out bool val) ? val : true;
-        return Task.FromResult(available);
+        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24)
+    };
+
+    public VehicleAvailabilityCache(IDistributedCache cache, ILogger<VehicleAvailabilityCache> logger)
+    {
+        _cache  = cache;
+        _logger = logger;
     }
 
-    public Task<bool> IsDriverAvailableAsync(Guid driverId)
+    public async Task<bool?> IsVehicleAvailableAsync(Guid vehicleId)
     {
-        bool available = _driverAvailability.TryGetValue(driverId, out bool val) ? val : true;
-        return Task.FromResult(available);
+        var value = await _cache.GetStringAsync(VehiclePrefix + vehicleId);
+
+        if (value == null)
+        {
+            // Not in cache — we genuinely don't know this vehicle's status
+            _logger.LogWarning(
+                "CACHE MISS: vehicle {VehicleId} not in cache — status unknown",
+                vehicleId);
+            return null;
+        }
+
+        return bool.Parse(value);
     }
 
-    public Task SetVehicleAvailableAsync(Guid vehicleId, bool available)
+    public async Task<bool?> IsDriverAvailableAsync(Guid driverId)
     {
-        _vehicleAvailability[vehicleId] = available;
-        return Task.CompletedTask;
+        var value = await _cache.GetStringAsync(DriverPrefix + driverId);
+
+        if (value == null)
+        {
+            _logger.LogWarning(
+                "CACHE MISS: driver {DriverId} not in cache — status unknown",
+                driverId);
+            return null;
+        }
+
+        return bool.Parse(value);
     }
 
-    public Task SetDriverAvailableAsync(Guid driverId, bool available)
+    public async Task SetVehicleAvailableAsync(Guid vehicleId, bool available)
     {
-        _driverAvailability[driverId] = available;
-        return Task.CompletedTask;
+        await _cache.SetStringAsync(
+            VehiclePrefix + vehicleId,
+            available.ToString(),
+            CacheOptions);
+
+        _logger.LogInformation(
+            "CACHE SET: vehicle {VehicleId} → available: {Available}",
+            vehicleId, available);
     }
-    
+
+    public async Task SetDriverAvailableAsync(Guid driverId, bool available)
+    {
+        await _cache.SetStringAsync(
+            DriverPrefix + driverId,
+            available.ToString(),
+            CacheOptions);
+
+        _logger.LogInformation(
+            "CACHE SET: driver {DriverId} → available: {Available}",
+            driverId, available);
+    }
 }

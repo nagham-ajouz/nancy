@@ -12,17 +12,28 @@ public class DriverService
 {
     private readonly IDriverRepository _driverRepository;
     private readonly IMapper           _mapper;
+    private readonly IFleetCacheService _cache;
 
-    public DriverService(IDriverRepository driverRepository, IMapper mapper)
+    public DriverService(
+        IDriverRepository driverRepository, 
+        IMapper mapper,
+        IFleetCacheService cache)
     {
         _driverRepository = driverRepository;
         _mapper           = mapper;
+        _cache = cache;
     }
 
     public async Task<IEnumerable<DriverDto>> GetAllAsync()
     {
+        var cached = await _cache.GetDriversAsync();
+        if (cached != null)
+            return cached;
+
         var drivers = await _driverRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<DriverDto>>(drivers);
+        var dtos    = _mapper.Map<IEnumerable<DriverDto>>(drivers);
+        await _cache.SetDriversAsync(dtos);
+        return dtos;
     }
 
     public async Task<DriverDto> GetByIdAsync(Guid id)
@@ -35,9 +46,13 @@ public class DriverService
     public async Task<DriverDto> CreateAsync(CreateDriverDto dto)
     {
         var licenseNumber = new LicenseNumber(dto.LicenseNumber);
-        var driver = new Driver(Guid.NewGuid(), dto.FirstName, dto.LastName,
-                                licenseNumber, dto.LicenseExpiry);
+        var driver = new Driver(Guid.NewGuid(), 
+            dto.FirstName, 
+            dto.LastName,
+            licenseNumber, 
+            dto.LicenseExpiry);
         await _driverRepository.AddAsync(driver);
+        await _cache.InvalidateDriversAsync();
         return _mapper.Map<DriverDto>(driver);
     }
 
@@ -47,6 +62,7 @@ public class DriverService
             ?? throw new NotFoundException($"Driver {id} not found.");
         driver.UpdateDetails(dto.FirstName, dto.LastName, dto.LicenseExpiry);
         await _driverRepository.UpdateAsync(driver);
+        await _cache.InvalidateDriversAsync();
         return _mapper.Map<DriverDto>(driver);
     }
 
@@ -55,6 +71,7 @@ public class DriverService
         var driver = await _driverRepository.GetByIdAsync(id)
             ?? throw new NotFoundException($"Driver {id} not found.");
         await _driverRepository.DeleteAsync(driver);
+        await _cache.InvalidateDriversAsync();
     }
 
     public async Task<IEnumerable<DriverDto>> GetByFilterAsync(string? status)

@@ -1,24 +1,25 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Json;
 using FleetService.Application.Interfaces;
 using FleetService.Application.Mapping;
 using FleetService.Application.Services;
+using FleetService.Infrastructure.Cache;
 using FleetService.Infrastructure.Messaging.Consumers;
 using FleetService.Infrastructure.Messaging.Publishers;
 using FleetService.Infrastructure.Persistence;
 using FleetService.Infrastructure.Repositories;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Shared.Middleware;
-using Serilog.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ── Serilog ───────────────────────────────────────────────────
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
@@ -30,12 +31,18 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// ── Redis (once only) ─────────────────────────────────────────
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName  = "FleetManagement:";
+});
+builder.Services.AddScoped<IFleetCacheService, FleetCacheService>();
+
+// ── Swagger ───────────────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    // Add JWT input box to Swagger UI
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name         = "Authorization",
@@ -45,7 +52,6 @@ builder.Services.AddSwaggerGen(options =>
         In           = ParameterLocation.Header,
         Description  = "Enter your JWT token"
     });
-
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -61,10 +67,11 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-builder.Services.AddControllers();
 
+builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(FleetMappingProfile).Assembly);
 
+// ── Authentication ────────────────────────────────────────────
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -76,23 +83,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer   = true,
             ValidIssuer      = builder.Configuration["Keycloak:Authority"]
         };
-
         options.Events = new JwtBearerEvents
         {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                    context.Token = accessToken;
+                return Task.CompletedTask;
+            },
             OnTokenValidated = context =>
             {
-                // Keycloak JWT has realm_access.roles as a nested JSON object
-                // We need to extract each role and add it as a ClaimTypes.Role
                 var claimsIdentity = context.Principal?.Identity as ClaimsIdentity;
                 if (claimsIdentity == null) return Task.CompletedTask;
-
-                // Find the raw realm_access claim
-                var realmAccessClaim = context.Principal?
-                    .FindFirst("realm_access")?.Value;
-
+                var realmAccessClaim = context.Principal?.FindFirst("realm_access")?.Value;
                 if (realmAccessClaim == null) return Task.CompletedTask;
-
-                // Parse the JSON and extract roles array
                 using var doc = JsonDocument.Parse(realmAccessClaim);
                 if (doc.RootElement.TryGetProperty("roles", out var rolesElement))
                 {
@@ -100,14 +106,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     {
                         var roleName = role.GetString();
                         if (!string.IsNullOrEmpty(roleName))
-                        {
-                            // Add each role as a standard ClaimTypes.Role claim
-                            claimsIdentity.AddClaim(
-                                new Claim(ClaimTypes.Role, roleName));
-                        }
+                            claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, roleName));
                     }
                 }
-
                 return Task.CompletedTask;
             }
         };
@@ -115,20 +116,33 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// ── Health checks ─────────────────────────────────────────────
+builder.Services.AddHealthChecks()
+    .AddNpgSql(
+        connectionString: builder.Configuration.GetConnectionString("Default")!,
+        name: "postgresql",
+        tags: new[] { "database" })
+    .AddRabbitMQ(
+        rabbitConnectionString: $"amqp://{builder.Configuration["RabbitMQ:Username"]}:{builder.Configuration["RabbitMQ:Password"]}@{builder.Configuration["RabbitMQ:Host"]}",
+        name: "rabbitmq",
+        tags: new[] { "messaging" });
+
+// ── Database ──────────────────────────────────────────────────
 builder.Services.AddDbContext<FleetDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
-// Repositories 
+// ── Repositories ──────────────────────────────────────────────
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IDriverRepository,  DriverRepository>();
 
-// Application services
-builder.Services.AddScoped<VehicleService>();
+// ── Application services (each registered once) ───────────────
+builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<DriverService>();
-builder.Services.AddScoped<DomainEventDispatcher>();
+
+// ── RabbitMQ ──────────────────────────────────────────────────
 builder.Services.AddMassTransit(x =>
 {
-    // Register consumers
     x.AddConsumer<TripStartedConsumer>();
     x.AddConsumer<TripCompletedConsumer>();
 
@@ -137,39 +151,94 @@ builder.Services.AddMassTransit(x =>
         var host     = builder.Configuration["RabbitMQ:Host"];
         var username = builder.Configuration["RabbitMQ:Username"];
         var password = builder.Configuration["RabbitMQ:Password"];
-        
+
         cfg.Host(host, "/", h =>
         {
             h.Username(username!);
             h.Password(password!);
         });
 
-        // Queue for Fleet to consume Trip events
         cfg.ReceiveEndpoint("fleet-trip-started", e =>
-        {
-            e.ConfigureConsumer<TripStartedConsumer>(ctx);
-        });
+            e.ConfigureConsumer<TripStartedConsumer>(ctx));
 
         cfg.ReceiveEndpoint("fleet-trip-completed", e =>
-        {
-            e.ConfigureConsumer<TripCompletedConsumer>(ctx);
-        });
+            e.ConfigureConsumer<TripCompletedConsumer>(ctx));
     });
 });
 
-// Register publisher
 builder.Services.AddScoped<IFleetEventPublisher, FleetEventPublisher>();
 
+// ── Build app ─────────────────────────────────────────────────
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// ── Migrations ────────────────────────────────────────────────
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<FleetDbContext>();
+    await db.Database.MigrateAsync();
+    Log.Information("Fleet DB migrations applied");
+}
+catch (Exception ex)
+{
+    Log.Warning("Migration skipped: {Error}", ex.Message);
 }
 
+// ── Startup publishing (once, with try-catch) ─────────────────
+try
+{
+    using var scope    = app.Services.CreateScope();
+    var vehicleRepo    = scope.ServiceProvider.GetRequiredService<IVehicleRepository>();
+    var driverRepo     = scope.ServiceProvider.GetRequiredService<IDriverRepository>();
+    var publisher      = scope.ServiceProvider.GetRequiredService<IFleetEventPublisher>();
+
+    var vehicles = await vehicleRepo.GetAllAsync();
+    foreach (var vehicle in vehicles)
+        await publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
+
+    var drivers = await driverRepo.GetAllAsync();
+    foreach (var driver in drivers)
+        await publisher.PublishDriverStatusChangedAsync(driver.Id, driver.Status.ToString());
+
+    Log.Information("Startup: published {V} vehicle and {D} driver statuses",
+        vehicles.Count(), drivers.Count());
+}
+catch (Exception ex)
+{
+    Log.Warning("Startup publishing skipped: {Error}", ex.Message);
+}
+
+// ── Pipeline ──────────────────────────────────────────────────
+
+// Always show Swagger — not just in Development
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        var result = new
+        {
+            status    = report.Status.ToString(),
+            timestamp = DateTime.UtcNow,
+            service   = "FleetService",
+            checks    = report.Entries.ToDictionary(
+                e => e.Key,
+                e => new
+                {
+                    status      = e.Value.Status.ToString(),
+                    description = e.Value.Description,
+                    duration    = e.Value.Duration.TotalMilliseconds + "ms"
+                })
+        };
+        await context.Response.WriteAsJsonAsync(result);
+    }
+});
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.Use(async (HttpContext context, RequestDelegate next) =>
 {
     var correlationId = context.Request.Headers["X-Correlation-ID"].FirstOrDefault()
@@ -180,8 +249,8 @@ app.Use(async (HttpContext context, RequestDelegate next) =>
         await next(context);
     }
 });
-app.UseAuthentication(); 
+
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
-

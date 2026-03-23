@@ -63,13 +63,30 @@ public class TripAppService
     public async Task<TripDto> AssignResourcesAsync(Guid tripId, AssignTripDto dto)
     {
         var trip = await _tripRepository.GetByIdAsync(tripId)
-            ?? throw new NotFoundException($"Trip {tripId} not found.");
-        bool vehicleAvailable = await _availabilityCache.IsVehicleAvailableAsync(dto.VehicleId);
-        bool driverAvailable  = await _availabilityCache.IsDriverAvailableAsync(dto.DriverId);
-        if (!vehicleAvailable)
-            throw new DomainException($"Vehicle {dto.VehicleId} is not available.");
-        if (!driverAvailable)
-            throw new DomainException($"Driver {dto.DriverId} is not available.");
+                   ?? throw new NotFoundException($"Trip {tripId} not found.");
+
+        // Check vehicle availability
+        bool? vehicleAvailable = await _availabilityCache.IsVehicleAvailableAsync(dto.VehicleId);
+
+        if (vehicleAvailable == null)
+            throw new DomainException(
+                $"Vehicle {dto.VehicleId} status is unknown. " +
+                "Ensure Fleet Service is running and has published vehicle status events.");
+
+        if (vehicleAvailable == false)
+            throw new DomainException($"Vehicle {dto.VehicleId} is not available for trips.");
+
+        // Check driver availability
+        bool? driverAvailable = await _availabilityCache.IsDriverAvailableAsync(dto.DriverId);
+
+        if (driverAvailable == null)
+            throw new DomainException(
+                $"Driver {dto.DriverId} status is unknown. " +
+                "Ensure Fleet Service is running and has published driver status events.");
+
+        if (driverAvailable == false)
+            throw new DomainException($"Driver {dto.DriverId} is not available for trips.");
+
         trip.AssignResources(dto.VehicleId, dto.DriverId);
         await _tripRepository.UpdateAsync(trip);
         return _mapper.Map<TripDto>(trip);
@@ -106,5 +123,33 @@ public class TripAppService
         var log = trip.AddLog(Guid.NewGuid(), location, dto.Timestamp, dto.Speed);
         await _tripRepository.AddLogAsync(log);
         return _mapper.Map<TripLogDto>(log);
+    }
+    
+    public async Task<bool> IsDriverAssignedToTripAsync(Guid tripId, Guid driverId)
+    {
+        var trip = await _tripRepository.GetByIdAsync(tripId);
+
+        if (trip == null)
+            throw new NotFoundException($"Trip {tripId} not found.");
+
+        if (trip.Status != TripStatus.InProgress)
+            throw new DomainException("Trip is not in progress.");
+
+        return trip.DriverId == driverId;
+    }
+    
+    public async Task<TripDto> InvoiceAsync(Guid tripId, InvoiceTripDto dto)
+    {
+        var trip = await _tripRepository.GetByIdAsync(tripId)
+                   ?? throw new NotFoundException($"Trip {tripId} not found.");
+
+        // Money is a value object — validates amount >= 0 and currency not empty
+        var cost = new Money(dto.Amount, dto.Currency);
+
+        // Domain method enforces Completed → Invoiced transition
+        trip.Invoice(cost);
+
+        await _tripRepository.UpdateAsync(trip);
+        return _mapper.Map<TripDto>(trip);
     }
 }
