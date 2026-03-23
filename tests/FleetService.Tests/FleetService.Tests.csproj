@@ -4,6 +4,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,5 +21,11 @@
         <ProjectReference Include="..\..\FleetService\FleetService.Application\FleetService.Application.csproj" />
         <ProjectReference Include="..\..\FleetService\FleetService.Infrastructure\FleetService.Infrastructure.csproj" />
         <ProjectReference Include="..\..\Shared\Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 </Project>

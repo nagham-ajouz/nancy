@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -31,6 +32,12 @@
       <ProjectReference Include="..\TripService.Application\TripService.Application.csproj" />
       <ProjectReference Include="..\TripService.Domain\TripService.Domain.csproj" />
       <ProjectReference Include="..\TripService.Infrastructure\TripService.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

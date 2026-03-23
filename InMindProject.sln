@@ -31,6 +31,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetService.Tests", "tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripService.Tests", "tests\TripService.Tests\TripService.Tests.csproj", "{36D29481-C07A-4FA2-B261-AA9289773730}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{8757109D-662D-4BF0-BA1F-CB2053935E04}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		FleetService\FleetService.API\Dockerfile = FleetService\FleetService.API\Dockerfile
+		TripService\TripService.API\Dockerfile = TripService\TripService.API\Dockerfile
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
