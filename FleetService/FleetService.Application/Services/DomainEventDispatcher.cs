@@ -1,5 +1,6 @@
 using FleetService.Application.Interfaces;
 using FleetService.Domain.Events;
+using FleetService.Interfaces.Services;
 using Shared.BaseClasses;
 
 namespace FleetService.Application.Services;

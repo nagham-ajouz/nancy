@@ -12,15 +12,5 @@
       <ProjectReference Include="..\..\Shared\Shared.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="ValueObjects\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
 </Project>
 

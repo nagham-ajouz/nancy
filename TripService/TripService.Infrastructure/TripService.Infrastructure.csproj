@@ -25,11 +25,5 @@
       <ProjectReference Include="..\TripService.Domain\TripService.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
 </Project>
 

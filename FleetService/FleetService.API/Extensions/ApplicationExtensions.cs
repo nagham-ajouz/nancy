@@ -1,6 +1,7 @@
 using FleetService.Application.Interfaces;
 using FleetService.Application.Mapping;
 using FleetService.Application.Services;
+using FleetService.Interfaces.Services;
 
 namespace FleetService.API.Extensions;
 

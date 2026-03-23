@@ -72,27 +72,7 @@ catch (Exception ex)
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapHealthChecks("/health", new HealthCheckOptions
-{
-    ResponseWriter = async (context, report) =>
-    {
-        context.Response.ContentType = "application/json";
-        await context.Response.WriteAsJsonAsync(new
-        {
-            status    = report.Status.ToString(),
-            timestamp = DateTime.UtcNow,
-            service   = "FleetService",
-            checks    = report.Entries.ToDictionary(
-                e => e.Key,
-                e => new
-                {
-                    status      = e.Value.Status.ToString(),
-                    description = e.Value.Description,
-                    duration    = e.Value.Duration.TotalMilliseconds + "ms"
-                })
-        });
-    }
-});
+app.MapHealthChecks("/health", HealthCheckExtensions.GetHealthResponse("FleetService"));
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

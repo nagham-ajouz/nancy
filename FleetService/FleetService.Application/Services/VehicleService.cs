@@ -4,6 +4,7 @@ using FleetService.Application.Interfaces;
 using FleetService.Domain.Entities;
 using FleetService.Domain.Enums;
 using FleetService.Domain.ValueObjects;
+using FleetService.Interfaces.Services;
 using Shared.Exceptions;
 
 namespace FleetService.Application.Services;
