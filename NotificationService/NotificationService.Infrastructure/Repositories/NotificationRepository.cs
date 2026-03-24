@@ -1,3 +1,4 @@
+// NotificationService.Infrastructure.Repositories.NotificationRepository.cs
 using Microsoft.EntityFrameworkCore;
 using NotificationService.Domain.Entities;
 using NotificationService.Domain.Interfaces;
@@ -7,44 +8,46 @@ namespace NotificationService.Infrastructure.Repositories;
 
 public class NotificationRepository : INotificationRepository
 {
-    private readonly NotificationDbContext _db;
+    private readonly NotificationDbContext _context;
 
-    public NotificationRepository(NotificationDbContext db) => _db = db;
+    public NotificationRepository(NotificationDbContext context)
+        => _context = context;
 
-    public async Task<Notification?> GetByIdAsync(Guid id) =>
-        await _db.Notifications.FindAsync(id);
+    public async Task<Notification?> GetByIdAsync(Guid id)
+        => await _context.Notifications.FindAsync(id);
 
     public async Task<IEnumerable<Notification>> GetByRoleAsync(string role, bool? unreadOnly = null)
     {
-        var query = _db.Notifications
+        IQueryable<Notification> query = _context.Notifications
             .Where(n => n.TargetRole == role);
 
         if (unreadOnly == true)
             query = query.Where(n => !n.IsRead);
 
-        return await query.OrderByDescending(n => n.CreatedAt).ToListAsync();
+        return await query
+            .OrderByDescending(n => n.CreatedAt)
+            .ToListAsync();
     }
 
-    public async Task<IEnumerable<Notification>> GetByUserAsync(Guid userId, bool? unreadOnly = null)
+    public async Task<IEnumerable<Notification>> GetByDriverIdAsync(Guid driverId, bool? unreadOnly = null)
     {
-        var query = _db.Notifications
-            .Where(n => n.TargetUserId == userId);
+        IQueryable<Notification> query = _context.Notifications
+            .Where(n => n.DriverId == driverId);
 
         if (unreadOnly == true)
             query = query.Where(n => !n.IsRead);
 
-        return await query.OrderByDescending(n => n.CreatedAt).ToListAsync();
+        return await query
+            .OrderByDescending(n => n.CreatedAt)
+            .ToListAsync();
     }
 
-    public async Task AddAsync(Notification notification) =>
-        await _db.Notifications.AddAsync(notification);
+    public async Task AddAsync(Notification notification)
+        => await _context.Notifications.AddAsync(notification);
 
-    public Task UpdateAsync(Notification notification)
-    {
-        _db.Notifications.Update(notification);
-        return Task.CompletedTask;
-    }
+    public async Task UpdateAsync(Notification notification)
+        => _context.Notifications.Update(notification);
 
-    public async Task<int> SaveChangesAsync() =>
-        await _db.SaveChangesAsync();
+    public async Task SaveChangesAsync()
+        => await _context.SaveChangesAsync();
 }

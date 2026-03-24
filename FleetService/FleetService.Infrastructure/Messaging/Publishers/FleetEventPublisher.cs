@@ -60,4 +60,12 @@ public class FleetEventPublisher : IFleetEventPublisher
             "PUBLISHED: DriverStatusChanged | DriverId: {DriverId} | NewStatus: {Status}",
             driverId, newStatus);
     }
+    
+    public async Task PublishDriverLicenseExpiryAsync(Guid driverId, DateTime licenseExpiry)
+    {
+        await _publishEndpoint.Publish(new DriverLicenseExpiryMessage(driverId, licenseExpiry));
+        _logger.LogInformation(
+            "PUBLISHED: DriverLicenseExpiry | DriverId: {DriverId} | Expiry: {Expiry}",
+            driverId, licenseExpiry);
+    }
 }

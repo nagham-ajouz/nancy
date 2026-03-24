@@ -1,3 +1,4 @@
+// NotificationService.Application.Services.NotificationAppService.cs
 using Microsoft.Extensions.Logging;
 using NotificationService.Application.DTOs;
 using NotificationService.Application.Interfaces;
@@ -32,15 +33,21 @@ public class NotificationAppService : INotificationService
             type, targetRole, message);
     }
 
+    public async Task<NotificationDto?> GetByIdAsync(Guid id)
+    {
+        var notification = await _repo.GetByIdAsync(id);
+        return notification == null ? null : ToDto(notification);
+    }
+
     public async Task<IEnumerable<NotificationDto>> GetByRoleAsync(string role, bool? unreadOnly = null)
     {
         var items = await _repo.GetByRoleAsync(role, unreadOnly);
         return items.Select(ToDto);
     }
 
-    public async Task<IEnumerable<NotificationDto>> GetByUserAsync(Guid userId, bool? unreadOnly = null)
+    public async Task<IEnumerable<NotificationDto>> GetByDriverIdAsync(Guid driverId, bool? unreadOnly = null)
     {
-        var items = await _repo.GetByUserAsync(userId, unreadOnly);
+        var items = await _repo.GetByDriverIdAsync(driverId, unreadOnly);
         return items.Select(ToDto);
     }
 

@@ -37,6 +37,8 @@ public class Driver : AggregateRoot
         LicenseNumber = licenseNumber;
         LicenseExpiry = licenseExpiry;
         Status        = DriverStatus.Available;
+        
+        AddDomainEvent(new DriverStatusChangedEvent(Id, Status));
     }
     
     internal void AssignVehicle(Guid vehicleId)

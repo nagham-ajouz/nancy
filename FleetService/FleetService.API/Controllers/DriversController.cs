@@ -63,11 +63,19 @@ public class DriversController : ControllerBase
     }
 
     // DELETE api/drivers/{id}
-    [HttpDelete("{id:guid}")]
+    // [HttpDelete("{id:guid}")]
+    // [Authorize(Roles = "Admin,FleetManager")]
+    // public async Task<IActionResult> Delete(Guid id)
+    // {
+    //     await _driverService.DeleteAsync(id);
+    //     return NoContent();
+    // }
+    
+    [HttpPut("{id:guid}/deactivate")]
     [Authorize(Roles = "Admin,FleetManager")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Deactivate(Guid id)
     {
-        await _driverService.DeleteAsync(id);
-        return NoContent();
+        var driver = await _driverService.DeactivateAsync(id);
+        return Ok(driver);
     }
 }

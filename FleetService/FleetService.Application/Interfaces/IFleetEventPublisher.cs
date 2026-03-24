@@ -6,4 +6,5 @@ public interface IFleetEventPublisher
     Task PublishDriverAssignedAsync(Guid vehicleId, Guid driverId);
     Task PublishDriverUnassignedAsync(Guid vehicleId, Guid driverId);
     Task PublishDriverStatusChangedAsync(Guid driverId, string newStatus);
+    Task PublishDriverLicenseExpiryAsync(Guid driverId, DateTime licenseExpiry);
 }

@@ -42,6 +42,7 @@ public class ExceptionHandlingMiddleware
         {
             NotFoundException    => HttpStatusCode.NotFound,           // 404
             DomainException      => HttpStatusCode.BadRequest,         // 400
+            ForbiddenException => HttpStatusCode.Forbidden,             //403
             ArgumentException    => HttpStatusCode.BadRequest,         // 400
             UnauthorizedAccessException => HttpStatusCode.Unauthorized, // 401
             _                    => HttpStatusCode.InternalServerError  // 500
