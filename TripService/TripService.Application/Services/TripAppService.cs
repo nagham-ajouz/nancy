@@ -6,6 +6,7 @@ using TripService.Application.DTOs.TripLog;
 using TripService.Application.Interfaces;
 using TripService.Domain.Entities;
 using TripService.Domain.Enums;
+using TripService.Domain.Pricing;
 
 namespace TripService.Application.Services;
 
@@ -15,16 +16,19 @@ public class TripAppService
     private readonly IVehicleAvailabilityCache _availabilityCache;
     private readonly IMapper                   _mapper;
     private readonly DomainEventDispatcher _dispatcher;
+    private readonly TripPricingCalculator _pricingCalculator;
 
     public TripAppService(ITripRepository tripRepository,
         IVehicleAvailabilityCache availabilityCache,
         DomainEventDispatcher dispatcher,
-        IMapper mapper)
+        IMapper mapper,
+        TripPricingCalculator pricingCalculator)
     {
         _tripRepository    = tripRepository;
         _availabilityCache = availabilityCache;
         _dispatcher = dispatcher;
         _mapper            = mapper;
+        _pricingCalculator = pricingCalculator;
     }
 
     public async Task<TripDto> CreateAsync(CreateTripDto dto)
@@ -132,18 +136,28 @@ public class TripAppService
         return trip.DriverId == driverId;
     }
     
-    public async Task<TripDto> InvoiceAsync(Guid tripId, InvoiceTripDto dto)
+    public async Task<TripDto> InvoiceAsync(Guid tripId)
     {
-        var trip = await _tripRepository.GetByIdAsync(tripId)
+        var trip = await _tripRepository.GetByIdWithLogsAsync(tripId)
                    ?? throw new NotFoundException($"Trip {tripId} not found.");
 
-        // Money is a value object — validates amount >= 0 and currency not empty
-        var cost = new Money(dto.Amount, dto.Currency);
+        // Build the context with all data needed for pricing
+        var context = new PricingContext
+        {
+            // Trip Service cache stores vehicle type — get it from cache
+            // For now we use a default — see note below
+            VehicleType = await _availabilityCache.GetVehicleTypeAsync(trip.VehicleId),
+            DistanceKm  = trip.DistanceKm ?? 0,
+            StartTime   = trip.StartTime  ?? DateTime.UtcNow,
+            EndTime     = trip.EndTime    ?? DateTime.UtcNow
+        };
 
-        // Domain method enforces Completed → Invoiced transition
+        // Calculate cost using all registered strategies
+        var cost = _pricingCalculator.Calculate(context);
+
         trip.Invoice(cost);
-
         await _tripRepository.UpdateAsync(trip);
+
         return _mapper.Map<TripDto>(trip);
     }
 }
