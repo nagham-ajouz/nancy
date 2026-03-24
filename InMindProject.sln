@@ -37,7 +37,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{875710
 		FleetService\FleetService.API\Dockerfile = FleetService\FleetService.API\Dockerfile
 		TripService\TripService.API\Dockerfile = TripService\TripService.API\Dockerfile
 		README.md = README.md
+		NotificationService\NotificationService.API\Dockerfile = NotificationService\NotificationService.API\Dockerfile
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationService", "NotificationService", "{64A3E161-82DA-42BB-888F-02BAB9C53D30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Domain", "NotificationService\NotificationService.Domain\NotificationService.Domain.csproj", "{EF1C6FEF-9543-482F-96BA-1C469E4CC8D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Application", "NotificationService\NotificationService.Application\NotificationService.Application.csproj", "{B22504C3-3E0A-4B25-8278-065A5D2A19FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Infrastructure", "NotificationService\NotificationService.Infrastructure\NotificationService.Infrastructure.csproj", "{57489D1E-5E6D-4505-A65C-4E2281566962}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.API", "NotificationService\NotificationService.API\NotificationService.API.csproj", "{B7382910-4384-4120-BBB3-35E13547D2CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +100,22 @@ Global
 		{36D29481-C07A-4FA2-B261-AA9289773730}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36D29481-C07A-4FA2-B261-AA9289773730}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36D29481-C07A-4FA2-B261-AA9289773730}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF1C6FEF-9543-482F-96BA-1C469E4CC8D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF1C6FEF-9543-482F-96BA-1C469E4CC8D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF1C6FEF-9543-482F-96BA-1C469E4CC8D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF1C6FEF-9543-482F-96BA-1C469E4CC8D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B22504C3-3E0A-4B25-8278-065A5D2A19FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B22504C3-3E0A-4B25-8278-065A5D2A19FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B22504C3-3E0A-4B25-8278-065A5D2A19FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B22504C3-3E0A-4B25-8278-065A5D2A19FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57489D1E-5E6D-4505-A65C-4E2281566962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57489D1E-5E6D-4505-A65C-4E2281566962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57489D1E-5E6D-4505-A65C-4E2281566962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57489D1E-5E6D-4505-A65C-4E2281566962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7382910-4384-4120-BBB3-35E13547D2CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7382910-4384-4120-BBB3-35E13547D2CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7382910-4384-4120-BBB3-35E13547D2CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7382910-4384-4120-BBB3-35E13547D2CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{30545CF8-10B5-4350-92E9-8FFAC382C7AC} = {A7B46ED0-763C-4716-8A84-4DAEE973408A}
@@ -102,5 +129,9 @@ Global
 		{D5C7EC3F-32E0-4461-A52F-330D81F14122} = {6DCF5525-BF42-40A0-BAC6-A4EA0709DF2C}
 		{5E5B2E5E-CF9E-48EB-8375-4B5235859478} = {CAC62EBB-CB39-439B-94DA-D3ABBF34C3E9}
 		{36D29481-C07A-4FA2-B261-AA9289773730} = {CAC62EBB-CB39-439B-94DA-D3ABBF34C3E9}
+		{EF1C6FEF-9543-482F-96BA-1C469E4CC8D8} = {64A3E161-82DA-42BB-888F-02BAB9C53D30}
+		{B22504C3-3E0A-4B25-8278-065A5D2A19FA} = {64A3E161-82DA-42BB-888F-02BAB9C53D30}
+		{57489D1E-5E6D-4505-A65C-4E2281566962} = {64A3E161-82DA-42BB-888F-02BAB9C53D30}
+		{B7382910-4384-4120-BBB3-35E13547D2CE} = {64A3E161-82DA-42BB-888F-02BAB9C53D30}
 	EndGlobalSection
 EndGlobal

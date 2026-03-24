@@ -4,6 +4,7 @@ using FleetService.Application.Interfaces;
 using FleetService.Domain.Entities;
 using FleetService.Domain.Enums;
 using FleetService.Domain.ValueObjects;
+using FleetService.Interfaces.Services;
 using Shared.Exceptions;
 
 namespace FleetService.Application.Services;
@@ -13,15 +14,18 @@ public class DriverService
     private readonly IDriverRepository _driverRepository;
     private readonly IMapper           _mapper;
     private readonly IFleetCacheService _cache;
+    private readonly IDomainEventDispatcher _dispatcher;
 
     public DriverService(
         IDriverRepository driverRepository, 
         IMapper mapper,
-        IFleetCacheService cache)
+        IFleetCacheService cache,
+        IDomainEventDispatcher dispatcher)
     {
         _driverRepository = driverRepository;
         _mapper           = mapper;
         _cache = cache;
+        _dispatcher = dispatcher;
     }
 
     public async Task<IEnumerable<DriverDto>> GetAllAsync()
@@ -62,6 +66,7 @@ public class DriverService
             ?? throw new NotFoundException($"Driver {id} not found.");
         driver.UpdateDetails(dto.FirstName, dto.LastName, dto.LicenseExpiry);
         await _driverRepository.UpdateAsync(driver);
+        await _dispatcher.DispatchAsync(driver);
         await _cache.InvalidateDriversAsync();
         return _mapper.Map<DriverDto>(driver);
     }

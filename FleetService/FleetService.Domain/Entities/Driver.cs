@@ -1,4 +1,5 @@
 using FleetService.Domain.Enums;
+using FleetService.Domain.Events;
 using FleetService.Domain.Exceptions;
 using FleetService.Domain.ValueObjects;
 using Shared.BaseClasses;
@@ -55,11 +56,13 @@ public class Driver : AggregateRoot
             throw new DomainException($"Driver must be Available to start a trip. Current status: {Status}");
 
         Status = DriverStatus.OnTrip;
+        AddDomainEvent(new DriverStatusChangedEvent(Id, Status));
     }
 
     public void MarkAvailable()
     {
         Status = DriverStatus.Available;
+        AddDomainEvent(new DriverStatusChangedEvent(Id, Status));
     }
 
     public void Deactivate()
@@ -68,6 +71,8 @@ public class Driver : AggregateRoot
             throw new DomainException("Cannot deactivate a driver who is currently on a trip.");
 
         Status = DriverStatus.Inactive;
+        
+        AddDomainEvent(new DriverStatusChangedEvent(Id, Status));
     }
     
     public void UpdateDetails(string firstName, string lastName, DateTime licenseExpiry)
@@ -80,4 +85,6 @@ public class Driver : AggregateRoot
         LastName      = lastName;
         LicenseExpiry = licenseExpiry;
     }
+    
+
 }
