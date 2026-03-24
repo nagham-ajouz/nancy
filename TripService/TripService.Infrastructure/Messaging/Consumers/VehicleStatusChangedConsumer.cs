@@ -27,5 +27,6 @@ public class VehicleStatusChangedConsumer : IConsumer<VehicleStatusChangedMessag
         // Only Active vehicles are available for trips
         bool available = message.NewStatus == "Active";
         await _cache.SetVehicleAvailableAsync(message.VehicleId, available);
+        await _cache.SetVehicleTypeAsync(message.VehicleId, message.VehicleType);
     }
 }

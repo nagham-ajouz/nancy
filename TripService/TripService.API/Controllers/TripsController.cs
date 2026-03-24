@@ -86,7 +86,7 @@ public class TripsController : ControllerBase
     [Authorize(Roles = "Admin,Dispatcher")]
     public async Task<IActionResult> Invoice(Guid id, [FromBody] InvoiceTripDto dto)
     {
-        var trip = await _tripService.InvoiceAsync(id, dto);
+        var trip = await _tripService.InvoiceAsync(id);
         return Ok(trip);
     }
 }

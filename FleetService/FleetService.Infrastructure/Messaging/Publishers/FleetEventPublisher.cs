@@ -17,9 +17,9 @@ public class FleetEventPublisher : IFleetEventPublisher
         _logger = logger;
     }
 
-    public async Task PublishVehicleStatusChangedAsync(Guid vehicleId, string newStatus)
+    public async Task PublishVehicleStatusChangedAsync(Guid vehicleId, string newStatus, string vehicleType)
     {
-        await _publishEndpoint.Publish(new VehicleStatusChangedMessage(vehicleId, newStatus));
+        await _publishEndpoint.Publish(new VehicleStatusChangedMessage(vehicleId, newStatus, vehicleType));
         _logger.LogInformation(
             "PUBLISHED: VehicleStatusChanged | VehicleId: {VehicleId} | NewStatus: {Status}",
             vehicleId, newStatus);

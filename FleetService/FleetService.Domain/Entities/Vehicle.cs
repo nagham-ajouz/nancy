@@ -45,7 +45,7 @@ public class Vehicle : AggregateRoot
             throw new InvalidStateTransitionException(Status, VehicleStatus.Active);
 
         Status = VehicleStatus.Active;
-        AddDomainEvent(new VehicleStatusChangedEvent(Id, Status));
+        AddDomainEvent(new VehicleStatusChangedEvent(Id, Status, Type));
     }
 
     public void SendToMaintenance()
@@ -54,7 +54,7 @@ public class Vehicle : AggregateRoot
             throw new InvalidStateTransitionException(Status, VehicleStatus.InMaintenance);
 
         Status = VehicleStatus.InMaintenance;
-        AddDomainEvent(new VehicleStatusChangedEvent(Id, Status));
+        AddDomainEvent(new VehicleStatusChangedEvent(Id, Status, Type));
     }
 
     public void CompleteMaintenance()
@@ -63,7 +63,7 @@ public class Vehicle : AggregateRoot
             throw new InvalidStateTransitionException(Status, VehicleStatus.Active);
 
         Status = VehicleStatus.Active;
-        AddDomainEvent(new VehicleStatusChangedEvent(Id, Status));
+        AddDomainEvent(new VehicleStatusChangedEvent(Id, Status, Type));
     }
 
     public void Decommission()
@@ -76,7 +76,7 @@ public class Vehicle : AggregateRoot
             throw new DomainException("Cannot decommission a vehicle with an assigned driver.");
 
         Status = VehicleStatus.Decommissioned;
-        AddDomainEvent(new VehicleStatusChangedEvent(Id, Status));
+        AddDomainEvent(new VehicleStatusChangedEvent(Id, Status, Type));
     }
     
     public void AssignDriver(Driver driver)

@@ -24,7 +24,7 @@ public class DomainEventDispatcher : IDomainEventDispatcher
             {
                 case VehicleStatusChangedEvent e:
                     await _publisher.PublishVehicleStatusChangedAsync(
-                        e.VehicleId, e.NewStatus.ToString());
+                        e.VehicleId, e.NewStatus.ToString(), e.Type.ToString());
                     break;
 
                 case DriverAssignedEvent e:

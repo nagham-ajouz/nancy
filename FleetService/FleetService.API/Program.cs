@@ -54,7 +54,7 @@ try
 
     var vehicles = await vehicleRepo.GetAllAsync();
     foreach (var vehicle in vehicles)
-        await publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString());
+        await publisher.PublishVehicleStatusChangedAsync(vehicle.Id, vehicle.Status.ToString(), vehicle.Type.ToString());
 
     var drivers = await driverRepo.GetAllAsync();
     foreach (var driver in drivers)

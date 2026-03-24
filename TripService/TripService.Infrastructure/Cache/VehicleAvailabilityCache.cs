@@ -11,6 +11,7 @@ public class VehicleAvailabilityCache : IVehicleAvailabilityCache
 
     private const string VehiclePrefix = "availability:vehicle:";
     private const string DriverPrefix  = "availability:driver:";
+    private const string VehicleTypePrefix = "vehicletype:";
 
     private static readonly DistributedCacheEntryOptions CacheOptions = new()
     {
@@ -60,7 +61,7 @@ public class VehicleAvailabilityCache : IVehicleAvailabilityCache
             VehiclePrefix + vehicleId,
             available.ToString(),
             CacheOptions);
-
+        
         _logger.LogInformation(
             "CACHE SET: vehicle {VehicleId} → available: {Available}",
             vehicleId, available);
@@ -76,5 +77,18 @@ public class VehicleAvailabilityCache : IVehicleAvailabilityCache
         _logger.LogInformation(
             "CACHE SET: driver {DriverId} → available: {Available}",
             driverId, available);
+    }
+
+    public async Task SetVehicleTypeAsync(Guid vehicleId, string vehicleType)
+    {
+        await _cache.SetStringAsync(
+            VehicleTypePrefix + vehicleId,
+            vehicleType,
+            CacheOptions);
+    }
+
+    public async Task<string?> GetVehicleTypeAsync(Guid vehicleId)
+    {
+        return await _cache.GetStringAsync(VehicleTypePrefix + vehicleId);
     }
 }
