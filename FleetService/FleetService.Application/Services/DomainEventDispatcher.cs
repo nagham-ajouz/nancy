@@ -34,6 +34,9 @@ public class DomainEventDispatcher : IDomainEventDispatcher
                 case DriverUnassignedEvent e:
                     await _publisher.PublishDriverUnassignedAsync(e.VehicleId, e.DriverId);
                     break;
+                case DriverStatusChangedEvent e:
+                    await _publisher.PublishDriverStatusChangedAsync(e.DriverId, e.NewStatus.ToString());
+                    break;
             }
         }
         entity.ClearDomainEvents();
